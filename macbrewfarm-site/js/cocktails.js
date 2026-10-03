@@ -1,9 +1,7 @@
-// ---------------------------------------------------------------------------
-// Mac Brew Farm: Interactive Cocktail & Craft Pours Deck
-// Free-scrolling, zero scroll-trapping, 3D card tilt & category filters.
-// ---------------------------------------------------------------------------
 import { cocktails } from './data.js';
 import { set } from './store.js';
+import { create3DDrinkViewer } from './realistic-3d-drink.js';
+import { farm3D } from './realistic-farm-scene.js';
 
 const $ = (id) => document.getElementById(id);
 const rupee = (n) => '₹' + n;
@@ -55,7 +53,19 @@ export function initCocktails({ isStatic }) {
           <div class="ck-card-glare" id="ckGlare"></div>
           <div class="ck-card-halo" id="ckHalo"></div>
           <div class="ck-image-box">
+            <div class="ck-mode-switcher">
+              <button class="ck-mode-btn is-active" id="ckBtnPhoto" type="button">📸 Real Photo</button>
+              <button class="ck-mode-btn" id="ckBtn3D" type="button">⚡ 3D Real Lab</button>
+            </div>
             <img class="ck-active-img" id="ckActiveImg" src="${cocktails[0].img || 'media/img/pomrita.webp'}" alt="${cocktails[0].name}" width="600" height="600" loading="eager">
+            <div class="ck-3d-lab-stage" id="ck3DStage" style="display:none">
+              <div class="ck-3d-hint-tag"><span>Drag to Orbit 360°</span></div>
+              <div class="ck-3d-action-bar">
+                <button class="ck-3d-action-btn" id="ckActionStir" type="button" title="Swirl and slosh liquid">⚡ Swirl & Slosh</button>
+                <button class="ck-3d-action-btn" id="ckActionIce" type="button" title="Toggle Ice Cubes">🧊 Ice</button>
+                <button class="ck-3d-action-btn" id="ckActionGlass" type="button" title="Toggle Glass Style">🍺 Glass</button>
+              </div>
+            </div>
             <div class="ck-swatch-badge" id="ckSwatchBadge">
               <span class="ck-swatch-dot" id="ckSwatchDot"></span>
               <span class="ck-swatch-label" id="ckSwatchLabel">${cocktails[0].categoryLabel}</span>
@@ -139,6 +149,77 @@ export function initCocktails({ isStatic }) {
   const nextBtn = $('ckNextBtn');
   const tabBtns = host.querySelectorAll('.ck-tab-btn');
 
+  // 3D Drink Viewer Setup
+  let viewer3D = null;
+  let hasIceActive = true;
+  let glassStyle = 'coupe';
+  let mode3D = false;
+
+  const stage3D = $('ck3DStage');
+  const btnPhoto = $('ckBtnPhoto');
+  const btn3D = $('ckBtn3D');
+  const actionStir = $('ckActionStir');
+  const actionIce = $('ckActionIce');
+  const actionGlass = $('ckActionGlass');
+
+  if (stage3D && !isStatic) {
+    try {
+      viewer3D = create3DDrinkViewer(stage3D);
+    } catch (err) {
+      console.warn('3D Drink viewer error:', err);
+    }
+  }
+
+  if (btnPhoto && btn3D && stage3D) {
+    btnPhoto.addEventListener('click', () => {
+      btn3D.classList.remove('is-active');
+      btnPhoto.classList.add('is-active');
+      stage3D.style.display = 'none';
+      activeImg.style.display = 'block';
+      mode3D = false;
+    });
+
+    btn3D.addEventListener('click', () => {
+      btnPhoto.classList.remove('is-active');
+      btn3D.classList.add('is-active');
+      activeImg.style.display = 'none';
+      stage3D.style.display = 'block';
+      mode3D = true;
+      if (viewer3D) {
+        viewer3D.resize(stage3D.clientWidth || 360, stage3D.clientHeight || 360);
+        const c = cocktails[activeIndex];
+        viewer3D.setDrinkConfig({
+          color: c.color,
+          foam: c.foam || 0.35,
+          hasIce: hasIceActive,
+          glassType: c.category === 'brews' ? 'pint' : glassStyle,
+          garnishType: c.category === 'brews' ? 'none' : 'lime',
+        });
+      }
+    });
+  }
+
+  if (actionStir) {
+    actionStir.addEventListener('click', () => {
+      if (viewer3D) viewer3D.triggerStir();
+    });
+  }
+
+  if (actionIce) {
+    actionIce.addEventListener('click', () => {
+      hasIceActive = !hasIceActive;
+      actionIce.classList.toggle('is-inactive', !hasIceActive);
+      if (viewer3D) viewer3D.setDrinkConfig({ hasIce: hasIceActive });
+    });
+  }
+
+  if (actionGlass) {
+    actionGlass.addEventListener('click', () => {
+      glassStyle = glassStyle === 'coupe' ? 'pint' : 'coupe';
+      if (viewer3D) viewer3D.setDrinkConfig({ glassType: glassStyle });
+    });
+  }
+
   // Render Thumbnails
   function renderThumbs() {
     const list = getVisibleCocktails();
@@ -215,6 +296,17 @@ export function initCocktails({ isStatic }) {
     halo.style.background = `radial-gradient(circle at 50% 50%, ${c.color}66 0%, transparent 70%)`;
     featureCard.style.setProperty('--card-accent', c.color);
 
+    // Sync with global 3D Brew Farm simulator
+    if (farm3D && farm3D.setDrinkStyle) {
+      if (c.category === 'brews') {
+        farm3D.setDrinkStyle('ale');
+      } else if (c.category === 'botanical') {
+        farm3D.setDrinkStyle('botanical');
+      } else {
+        farm3D.setDrinkStyle('pomrita');
+      }
+    }
+
     // Palate Profile Meters Animation
     const prof = c.profile || { strength: 65, sweetness: 50, citrus: 60, aroma: 70 };
     const valStrength = $('ckValStrength');
@@ -236,6 +328,17 @@ export function initCocktails({ isStatic }) {
       const b2 = $('ckBarSweet'); if (b2) b2.style.width = prof.sweetness + '%';
       const b3 = $('ckBarCitrus'); if (b3) b3.style.width = prof.citrus + '%';
       const b4 = $('ckBarAroma'); if (b4) b4.style.width = prof.aroma + '%';
+    }
+
+    // Synchronize 3D Realistic Viewer
+    if (viewer3D) {
+      viewer3D.setDrinkConfig({
+        color: c.color,
+        foam: c.foam || 0.35,
+        hasIce: hasIceActive,
+        glassType: c.category === 'brews' ? 'pint' : glassStyle,
+        garnishType: c.category === 'brews' ? 'none' : 'lime',
+      });
     }
   }
 

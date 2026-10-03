@@ -56,6 +56,15 @@
     }, 4000);
   </script>
 
+  <!-- Three.js Module Importmap -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"
+    }
+  }
+  </script>
+
   <!-- Libraries -->
   <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
@@ -93,10 +102,11 @@
     </div>
   </div>
 
-  <!-- Dynamic Ambient Glow Layer -->
+  <!-- Dynamic Ambient Glow & 3D Living Atmosphere Layer -->
   <div class="bg-fixed" id="bgFixed" aria-hidden="true">
     <div class="bg-gradient-base"></div>
     <div class="bg-glow" id="bgGlow"></div>
+    <canvas class="farm-gl-canvas" id="farmGlCanvas"></canvas>
   </div>
 
   <!-- Header Navigation -->
@@ -141,19 +151,33 @@
   </div>
 
   <main id="main">
-    <!-- HERO SECTION WITH CINEMATIC VIDEO BACKGROUND -->
+    <!-- HERO SECTION WITH INTERACTIVE 3D REALISTIC BREW FARM STAGE -->
     <section class="hero" id="top">
-      <div class="hero-video-wrap" aria-hidden="true">
-        <video class="hero-video" id="heroVideo" autoplay loop muted playsinline poster="media/video/reel-golden-hour.webp">
-          <source src="media/video/reel-golden-hour.mp4" type="video/mp4">
-        </video>
-        <div class="hero-scrim"></div>
-      </div>
-
       <div class="hero-top-status">
         <div class="hero-live-badge">
           <span class="live-dot"></span>
           <span>Open Daily 12 PM – 1 AM • Bengaluru Garden Brewery</span>
+        </div>
+      </div>
+
+      <!-- 3D Brew Farm Interactive HUD Bar -->
+      <div class="farm-hud-bar" role="toolbar" aria-label="3D Brew Farm World Controls">
+        <div class="farm-hud-group farm-hud-waypoints">
+          <button type="button" class="farm-hud-btn is-active" data-waypoint="overview">🌐 Estate Tour</button>
+          <button type="button" class="farm-hud-btn" data-waypoint="bar">🍺 Tap Bar</button>
+          <button type="button" class="farm-hud-btn" data-waypoint="drink">🍸 3D Drink Lab</button>
+          <button type="button" class="farm-hud-btn" data-waypoint="pond">🌾 Water Garden</button>
+        </div>
+        <div class="farm-hud-group farm-hud-actions">
+          <button type="button" class="farm-hud-btn farm-hud-special" id="hudAtmoToggle" title="Switch between Golden Hour and Night Garden">
+            <span class="hud-atmo-icon">🌅</span> <span class="hud-atmo-text">Golden Hour</span>
+          </button>
+          <button type="button" class="farm-hud-btn" id="hudDrinkStyleBtn" title="Switch drink craft style">
+            <span class="hud-drink-icon">🍺</span> <span class="hud-drink-text">Craft Ale</span>
+          </button>
+          <button type="button" class="farm-hud-btn" id="hudSwirlBtn" title="Swirl liquid in glass">
+            <span>💫 Swirl</span>
+          </button>
         </div>
       </div>
 
@@ -176,6 +200,11 @@
           </button>
           <a class="btn btn-ghost" href="https://maps.app.goo.gl/RtQ9ZF1NsLNxJRQh9?g_st=ic" target="_blank" rel="noopener">Directions</a>
         </div>
+      </div>
+
+      <!-- 3D Interactive Stage Hint -->
+      <div class="farm-hud-hint" aria-hidden="true">
+        <span>✨ 360° Interactive 3D Brew Farm • Drag anywhere to Orbit • Click Water for Ripples • Tap Glass to Swirl</span>
       </div>
     </section>
 

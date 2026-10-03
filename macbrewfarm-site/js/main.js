@@ -10,6 +10,7 @@ import { initCocktails } from './cocktails.js';
 import { initVideoTheater } from './video-theater.js';
 import { initMenu } from './menu.js';
 import { initSections } from './sections.js';
+import { initFarmScene } from './realistic-farm-scene.js';
 
 clearTimeout(window.__mbfFallback);
 
@@ -198,6 +199,14 @@ function boot() {
   initVideoTheater({ isStatic, reduce });
   initMenu({ animate: !isStatic });
   initSections({ isStatic, reduce });
+
+  if (!reduce) {
+    try {
+      initFarmScene();
+    } catch (err) {
+      console.warn('3D Farm WebGL scene unavailable:', err);
+    }
+  }
 
   runPreloader();
 
