@@ -4,38 +4,66 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Mac Brew Farm, Bengaluru | Good food. Great pours. Even better vibes.</title>
-  <meta name="description" content="Mac Brew Farm in Bengaluru: signature cocktails, a global kitchen, live nights and open-air seating under green canopies. See the menu and get directions.">
+  <meta name="description" content="Mac Brew Farm in Bengaluru: signature craft cocktails, global kitchen, craft beers on tap, live nights, and open-air seating under green canopies.">
   <meta name="theme-color" content="#10291F">
   <link rel="icon" href="favicon.png" type="image/png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
 
+  <!-- OpenGraph -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="Mac Brew Farm, Bengaluru">
-  <meta property="og:description" content="Good food. Great pours. Even better vibes.">
-  <!-- After deploying, change this to the full URL, e.g. https://yourdomain.com/media/og.jpg -->
+  <meta property="og:description" content="Good food. Great pours. Even better vibes. Open-air dining & craft brewery.">
   <meta property="og:image" content="media/og.jpg">
   <meta name="twitter:card" content="summary_large_image">
 
+  <!-- Fonts: Cormorant Garamond & Josefin Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Josefin+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap">
+  
   <link rel="stylesheet" href="css/styles.css">
 
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"BarOrPub","name":"Mac Brew Farm","slogan":"Good food. Great pours. Even better vibes.","address":{"@type":"PostalAddress","addressLocality":"Bengaluru","addressCountry":"IN"},"hasMap":"https://maps.app.goo.gl/RtQ9ZF1NsLNxJRQh9"}
+  {
+    "@context": "https://schema.org",
+    "@type": "BarOrPub",
+    "name": "Mac Brew Farm",
+    "slogan": "Good food. Great pours. Even better vibes.",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Bengaluru",
+      "addressCountry": "IN"
+    },
+    "hasMap": "https://maps.app.goo.gl/RtQ9ZF1NsLNxJRQh9"
+  }
   </script>
-  <noscript><style>.preloader{display:none!important}html.is-loading,html.is-loading body{overflow:auto!important}</style></noscript>
+  
+  <noscript>
+    <style>
+      .preloader { display: none !important; }
+      html.is-loading, html.is-loading body { overflow: auto !important; }
+    </style>
+  </noscript>
 
-  <script>window.__mbfFallback=setTimeout(function(){var h=document.documentElement;if(h.classList.contains("is-loading")){h.classList.remove("is-loading");var p=document.getElementById("preloader");if(p)p.style.display="none";}},12000);</script>
-  <script type="importmap">
-  {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"}}
+  <script>
+    window.__mbfFallback = setTimeout(function() {
+      var h = document.documentElement;
+      if (h.classList.contains("is-loading")) {
+        h.classList.remove("is-loading");
+        var p = document.getElementById("preloader");
+        if (p) p.style.display = "none";
+      }
+    }, 4000);
   </script>
+
+  <!-- Libraries -->
   <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
   <script type="module" src="js/main.js"></script>
 </head>
 <body>
+  <!-- Hop SVG Symbol -->
   <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
     <symbol id="hop" viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
       <path d="M12 6.5C7 6.5 4.8 10.5 5.6 15.5 6.4 20.5 9.6 25 12 29.5 14.4 25 17.6 20.5 18.4 15.5 19.2 10.5 17 6.5 12 6.5Z"/>
@@ -59,279 +87,268 @@
           <circle class="pl-track" cx="60" cy="60" r="54"/>
           <circle class="pl-bar" id="plBar" cx="60" cy="60" r="54"/>
         </svg>
-        <img src="media/img/mark-cream.png" alt="" width="64" height="66">
+        <img src="media/img/mark-cream.png" alt="Mac Brew Farm Crest" width="64" height="66">
       </div>
       <p class="pl-count"><span id="plNum">0</span>%</p>
     </div>
   </div>
 
-  <!-- Fixed layers: background colour, then the 3D canvas -->
+  <!-- Dynamic Ambient Glow Layer -->
   <div class="bg-fixed" id="bgFixed" aria-hidden="true">
-    <div class="bg-maroon" id="bgMaroon"></div>
+    <div class="bg-gradient-base"></div>
     <div class="bg-glow" id="bgGlow"></div>
   </div>
-  <canvas class="gl" id="gl" aria-hidden="true"></canvas>
 
+  <!-- Header Navigation -->
   <header class="nav" id="nav">
     <a class="nav-brand" href="#top" aria-label="Mac Brew Farm, back to top">
-      <img src="media/img/mark-cream.png" alt="" width="44" height="45">
+      <img src="media/img/mark-cream.png" alt="Mac Brew Farm emblem" width="42" height="43">
       <span class="nav-word"><b>MAC</b> BREW FARM</span>
     </a>
-    <nav class="nav-links" aria-label="Primary">
-      <a href="#cocktails">Cocktails</a>
+    <nav class="nav-links" aria-label="Primary Navigation">
+      <a href="#cocktails">Cocktails & Brews</a>
+      <a href="#theater">Experience</a>
+      <a href="#spaces">Spaces</a>
       <a href="#kitchen">Kitchen</a>
-      <a href="#menu">Menu</a>
-      <a href="#nights">Nights</a>
-      <a href="#reels">Gallery</a>
+      <a href="#nights">Live Nights</a>
+      <a href="#menu">Digital Menu</a>
       <a href="#visit">Visit</a>
     </nav>
-    <a class="btn btn-small nav-cta" href="https://maps.app.goo.gl/RtQ9ZF1NsLNxJRQh9?g_st=ic" target="_blank" rel="noopener">Directions</a>
-    <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navOverlay" aria-label="Open navigation"><span></span><span></span></button>
+    <a class="btn btn-small nav-cta" href="https://maps.app.goo.gl/RtQ9ZF1NsLNxJRQh9?g_st=ic" target="_blank" rel="noopener">Find Us</a>
+    <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navOverlay" aria-label="Open navigation">
+      <span></span><span></span>
+    </button>
   </header>
 
+  <!-- Mobile Drawer Overlay -->
   <div class="nav-overlay" id="navOverlay">
-    <nav aria-label="Mobile">
-      <a href="#cocktails">Cocktails</a>
+    <nav aria-label="Mobile Navigation">
+      <a href="#cocktails">Cocktails & Brews</a>
+      <a href="#theater">Experience</a>
+      <a href="#spaces">Spaces</a>
       <a href="#kitchen">Kitchen</a>
-      <a href="#menu">Menu</a>
-      <a href="#nights">Nights</a>
-      <a href="#reels">Gallery</a>
+      <a href="#nights">Live Nights</a>
+      <a href="#menu">Digital Menu</a>
       <a href="#visit">Visit</a>
     </nav>
-    <a class="btn btn-solid" href="https://maps.app.goo.gl/RtQ9ZF1NsLNxJRQh9?g_st=ic" target="_blank" rel="noopener">Get directions</a>
+    <a class="btn btn-solid" href="https://maps.app.goo.gl/RtQ9ZF1NsLNxJRQh9?g_st=ic" target="_blank" rel="noopener">Get Directions</a>
   </div>
 
-  <div class="cursor" id="cursor" aria-hidden="true"><i class="cursor-dot"></i><i class="cursor-ring"></i></div>
+  <!-- Custom Organic Cursor -->
+  <div class="cursor" id="cursor" aria-hidden="true">
+    <i class="cursor-dot"></i>
+    <i class="cursor-ring"></i>
+  </div>
 
   <main id="main">
-    <!-- HERO -->
+    <!-- HERO SECTION WITH CINEMATIC VIDEO BACKGROUND -->
     <section class="hero" id="top">
+      <div class="hero-video-wrap" aria-hidden="true">
+        <video class="hero-video" id="heroVideo" autoplay loop muted playsinline poster="media/video/reel-golden-hour.webp">
+          <source src="media/video/reel-golden-hour.mp4" type="video/mp4">
+        </video>
+        <div class="hero-scrim"></div>
+      </div>
+
+      <div class="hero-top-status">
+        <div class="hero-live-badge">
+          <span class="live-dot"></span>
+          <span>Open Daily 12 PM – 1 AM • Bengaluru Garden Brewery</span>
+        </div>
+      </div>
+
       <h1 class="hero-title">
         <span class="sr">Mac Brew Farm</span>
         <span class="hero-mac" aria-hidden="true">MAC</span>
         <span class="hero-brew" aria-hidden="true">BREW FARM</span>
       </h1>
-      <div class="hero-art" aria-hidden="true"><img src="media/img/pomrita-poster.webp" alt="" width="1290" height="1273"></div>
+
       <div class="hero-fg">
         <div class="hero-copy">
           <p class="hero-tag">Good food. Great pours. Even better vibes.</p>
-          <p class="hero-sub">Cocktails, brews and a global kitchen in Bengaluru.</p>
+          <p class="hero-sub">Signature craft cocktails, in-house beers, and a global kitchen under open-air canopies.</p>
         </div>
         <div class="hero-cta">
-          <a class="btn btn-solid" href="#menu">See the menu</a>
-          <a class="btn btn-ghost" href="https://maps.app.goo.gl/RtQ9ZF1NsLNxJRQh9?g_st=ic" target="_blank" rel="noopener">Get directions</a>
+          <a class="btn btn-solid" href="#cocktails">Explore Cocktails</a>
+          <a class="btn btn-ghost" href="#menu">Digital Menu</a>
+          <button class="btn btn-ghost" id="ambienceAudioToggle" type="button" aria-pressed="false" title="Toggle atmospheric garden acoustics">
+            <span>🌿 Garden Sound</span>
+          </button>
+          <a class="btn btn-ghost" href="https://maps.app.goo.gl/RtQ9ZF1NsLNxJRQh9?g_st=ic" target="_blank" rel="noopener">Directions</a>
         </div>
       </div>
     </section>
 
-    <!-- SIGNATURE COCKTAILS (pinned, drives the 3D glass) -->
-    <section class="cocktails" id="cocktails" aria-labelledby="ckHeading">
-      <div class="ck-pin" id="ckPin">
-        <div class="ck-grid">
-          <div class="ck-copy">
-            <h2 class="ck-heading" id="ckHeading">Signature cocktails</h2>
-            <p class="ck-count" id="ckCount" aria-live="polite">1 of 11</p>
-            <h3 class="ck-name display" id="ckName"></h3>
-            <ul class="ck-chips" id="ckChips" aria-label="Ingredients"></ul>
-            <p class="ck-price" id="ckPrice"></p>
-          </div>
-          <div class="ck-stage" aria-hidden="true"></div>
-          <figure class="ck-card" id="ckCard">
-            <img id="ckImg" alt="" width="567" height="690">
-            <div class="ck-swatch" id="ckSwatch" aria-hidden="true"><svg class="hop"><use href="#hop"/></svg><span id="ckSwatchName"></span></div>
-          </figure>
-        </div>
-        <ol class="ck-dots" id="ckDots" aria-label="Choose a cocktail"></ol>
-        <div class="ck-progress" aria-hidden="true"><i id="ckBar"></i></div>
-        <a class="ck-skip" href="#menu">Jump to the full menu</a>
-      </div>
-      <div class="ck-static" id="ckStatic"></div>
-    </section>
-
-    <!-- MARQUEE -->
+    <!-- MARQUEE DIVIDER -->
     <div class="marquee opaque" aria-hidden="true">
       <div class="marquee-track">
-        <span>Good food</span><svg class="hop"><use href="#hop"/></svg>
-        <span>Great pours</span><svg class="hop"><use href="#hop"/></svg>
-        <span>Even better vibes</span><svg class="hop"><use href="#hop"/></svg>
-        <span>Great ambience</span><svg class="hop"><use href="#hop"/></svg>
-        <span>Good food</span><svg class="hop"><use href="#hop"/></svg>
-        <span>Great pours</span><svg class="hop"><use href="#hop"/></svg>
-        <span>Even better vibes</span><svg class="hop"><use href="#hop"/></svg>
-        <span>Great ambience</span><svg class="hop"><use href="#hop"/></svg>
+        <span>Good Food</span><svg class="hop"><use href="#hop"/></svg>
+        <span>Great Pours</span><svg class="hop"><use href="#hop"/></svg>
+        <span>Even Better Vibes</span><svg class="hop"><use href="#hop"/></svg>
+        <span>Garden Ambience</span><svg class="hop"><use href="#hop"/></svg>
+        <span>Craft Brews</span><svg class="hop"><use href="#hop"/></svg>
+        <span>Good Food</span><svg class="hop"><use href="#hop"/></svg>
+        <span>Great Pours</span><svg class="hop"><use href="#hop"/></svg>
+        <span>Even Better Vibes</span><svg class="hop"><use href="#hop"/></svg>
+        <span>Garden Ambience</span><svg class="hop"><use href="#hop"/></svg>
+        <span>Craft Brews</span><svg class="hop"><use href="#hop"/></svg>
       </div>
     </div>
 
-    <!-- STORY -->
-    <section class="story opaque" id="story" aria-labelledby="storyTitle">
-      <div class="wrap story-grid">
-        <div class="story-copy">
-          <h2 class="display story-title" id="storyTitle">A little green. A little golden hour. A lot to come back for.</h2>
-          <p class="lede">Open-air seating under green canopies, a pond and a fountain, and a bar that glows after dark. Come for a quick get-away. Stay for the feast.</p>
-          <ul class="checks">
-            <li><svg class="hop"><use href="#hop"/></svg>Great ambience</li>
-            <li><svg class="hop"><use href="#hop"/></svg>Great food</li>
-            <li><svg class="hop"><use href="#hop"/></svg>Great vibes</li>
-          </ul>
-        </div>
-        <figure class="story-fig">
-          <img src="media/img/venue-everything.webp" width="1290" height="1278" loading="lazy" alt="Open-air seating at golden hour under green canopies beside a pond. A cartoon couple at a table asks &quot;what's good here?&quot; and the answer is &quot;everything&quot;.">
-        </figure>
-      </div>
-      <div class="spaces" id="spaces" aria-label="Around Mac Brew Farm">
-        <div class="spaces-track">
-          <figure><img src="media/img/space-building.webp" width="720" height="1280" loading="lazy" alt="The curved building and pond"></figure>
-          <figure><img src="media/img/space-lamps.webp" width="720" height="1280" loading="lazy" alt="Woven pendant lamps glowing against a curved ceiling"></figure>
-          <figure><img src="media/img/space-bar.webp" width="720" height="1280" loading="lazy" alt="The bar under curved ceiling lights with leaf-shaped green pillars"></figure>
-          <figure><img src="media/img/space-fountain.webp" width="720" height="1280" loading="lazy" alt="A fountain beside a stepped pond"></figure>
-          <figure><img src="media/img/space-night.webp" width="720" height="1280" loading="lazy" alt="Open-air seating at night under golden lanterns"></figure>
-          <figure><img src="media/img/space-seating.webp" width="720" height="1280" loading="lazy" alt="Outdoor tables and chairs in daylight"></figure>
-          <figure><img src="media/img/space-lantern.webp" width="720" height="1280" loading="lazy" alt="A woven lantern between tall green pillars"></figure>
-          <figure><img src="media/img/space-lounge.webp" width="720" height="1280" loading="lazy" alt="A lounge area under a canopy"></figure>
-        </div>
+    <!-- SIGNATURE COCKTAILS & CRAFT POURS (INTERACTIVE DECK - NO SCROLL TRAP) -->
+    <section class="cocktails-section opaque" id="cocktails" aria-label="Signature Cocktails & Craft Pours">
+      <div class="wrap" id="cocktailsApp">
+        <!-- Rendered dynamically by js/cocktails.js -->
       </div>
     </section>
 
-    <!-- POURS -->
+    <!-- REAL-WORLD VIDEO THEATER -->
+    <section class="video-theater-section opaque" id="theater" aria-label="Atmosphere & Video Reels">
+      <div class="wrap" id="videoTheaterApp">
+        <!-- Rendered dynamically by js/video-theater.js -->
+      </div>
+    </section>
+
+    <!-- IN-HOUSE CRAFT POURS SPOTLIGHT -->
     <section class="pours opaque" id="pours" aria-labelledby="poursTitle">
       <div class="wrap pours-grid">
-        <div class="pours-circle">
-          <img src="media/img/beer-pints.webp" width="1290" height="1706" loading="lazy" alt="Two pints of golden beer with the Mac Brew Farm emblem pressed into the foam">
+        <div class="pours-circle" data-tilt>
+          <img src="media/img/beer-pints.webp" width="1290" height="1706" loading="lazy" alt="Two golden pints of Mac Brew Farm craft beer with the hop emblem embossed in the velvety foam">
+          <div class="pours-emblem-badge" aria-hidden="true">
+            <img src="media/img/mark-cream.png" alt="" width="50" height="52">
+            <span>Farm Brewed</span>
+          </div>
         </div>
         <div class="pours-copy">
-          <h2 class="display" id="poursTitle">Great pours.</h2>
-          <p class="lede">Golden pints finished with our emblem in the foam, and a bar that mixes everything from a Basil Spritz to a System Hack made with our in-house beer.</p>
+          <span class="pours-badge-pill">On Tap & In House</span>
+          <h2 class="display" id="poursTitle">Fresh Pours & The Emblem in the Foam.</h2>
+          <p class="lede">Golden pints poured with our signature hop mark in the foam, alongside high-energy blends like the System Hack made with our fresh house brew.</p>
           <div class="pours-minis">
-            <img src="media/img/coconut-cocktail.webp" width="567" height="691" loading="lazy" alt="A creamy cocktail with a coconut-rimmed glass">
-            <img src="media/img/pineapple-cocktail.webp" width="567" height="691" loading="lazy" alt="A pineapple cocktail with a paper umbrella and cherry">
+            <div class="pour-mini-card" data-tilt>
+              <img src="media/img/coconut-cocktail.webp" width="567" height="691" loading="lazy" alt="Coconut Cloud cocktail">
+              <span>Coconut Cloud</span>
+            </div>
+            <div class="pour-mini-card" data-tilt>
+              <img src="media/img/pineapple-cocktail.webp" width="567" height="691" loading="lazy" alt="Pineapple cocktail">
+              <span>Pineapple Solstice</span>
+            </div>
+            <div class="pour-mini-card" data-tilt>
+              <img src="media/img/lychee-cocktail.webp" width="567" height="691" loading="lazy" alt="Mac Brew Splash cocktail">
+              <span>Mac Brew Splash</span>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- KITCHEN (horizontal scroll) -->
-    <section class="kitchen opaque" id="kitchen" aria-labelledby="kitchenTitle">
-      <div class="kitchen-head wrap">
-        <h2 class="display" id="kitchenTitle">From the kitchen</h2>
-        <p class="lede">Khao soi, grilled chicken skewers, shrimp, gadbad ice cream and more.</p>
+    <!-- SPACES & ARCHITECTURE CAROUSEL -->
+    <section class="spaces-section opaque" id="spaces" aria-label="Spaces of Mac Brew Farm">
+      <div id="spacesApp">
+        <!-- Rendered dynamically by js/sections.js -->
       </div>
-      <div class="kitchen-viewport">
-        <div class="kitchen-track">
-          <figure class="dish-card"><img src="media/img/khao-soi.webp" width="567" height="587" loading="lazy" alt="A bowl of khao soi with crispy noodles and herbs"><figcaption>Khao soi</figcaption></figure>
-          <figure class="dish-card tall"><img src="media/img/green-chicken-a.webp" width="567" height="691" loading="lazy" alt="Green herb chicken with crispy noodle nest and microgreens"></figure>
-          <figure class="dish-card"><img src="media/img/chicken-skewers.webp" width="567" height="546" loading="lazy" alt="Grilled chicken skewers with a fresh salad"><figcaption>Grilled chicken skewers and salad</figcaption></figure>
-          <figure class="dish-card wide"><img src="media/img/dessert-plate.webp" width="1218" height="712" loading="lazy" alt="A plated dessert with ice cream, crunchy bits and a caramel leaf"></figure>
-          <figure class="dish-card"><img src="media/img/shrimp.webp" width="567" height="587" loading="lazy" alt="Shrimp in a creamy sauce with toasted bread"><figcaption>Shrimp appetizer</figcaption></figure>
-          <figure class="dish-card tall"><img src="media/img/noodles.webp" width="567" height="690" loading="lazy" alt="A bowl of stir-fried noodles with dipping sauces"></figure>
-          <figure class="dish-card"><img src="media/img/gadbad.webp" width="567" height="602" loading="lazy" alt="Gadbad ice cream with three scoops, fruit and chocolate crumble"><figcaption>Gadbad ice cream</figcaption></figure>
-          <figure class="dish-card tall"><img src="media/img/chicken-plate.webp" width="567" height="690" loading="lazy" alt="Spiced chicken on whipped yogurt with a lemon slice"></figure>
-          <figure class="dish-card tall"><img src="media/img/green-chicken-b.webp" width="567" height="691" loading="lazy" alt="Green masala chicken topped with crisp rice noodles"></figure>
+    </section>
+
+    <!-- KITCHEN & GASTRONOMY -->
+    <section class="kitchen-section opaque" id="kitchen" aria-label="From the Kitchen">
+      <div id="kitchenApp">
+        <!-- Rendered dynamically by js/sections.js -->
+      </div>
+    </section>
+
+    <!-- LIVE NIGHTS & EVENTS WITH 3D TILT POSTERS -->
+    <section class="nights opaque" id="nights" aria-labelledby="nightsTitle">
+      <div class="wrap">
+        <div class="nights-head">
+          <span class="nights-pill">Live Line-Up</span>
+          <h2 class="display" id="nightsTitle">Live Nights Under the Lanterns</h2>
+          <p class="lede">Acoustic garden sessions, indie vocalists, and weekend Hollywood & Bollywood nights.</p>
+        </div>
+        <div class="nights-grid">
+          <article class="night-poster-card" data-tilt>
+            <div class="night-poster-img-wrap">
+              <img src="media/img/poster-bhavya.webp" width="1290" height="1714" loading="lazy" alt="Poster: Live music with singer Bhavya">
+              <div class="poster-overlay-glow"></div>
+            </div>
+            <div class="night-details">
+              <span class="night-tag">Live Acoustic & Indie</span>
+              <h3>Live Music with Bhavya</h3>
+              <p>Evening acoustic vibes under the green canopy. Reserve for preferred pond-side seating.</p>
+              <a class="btn btn-small btn-solid" href="https://wa.me/919845012345?text=Hi%20Mac%20Brew%20Farm,%20I%20would%20like%20to%20reserve%20a%20table%20for%20Live%20Music%20with%20Bhavya." target="_blank" rel="noopener">RSVP on WhatsApp</a>
+            </div>
+          </article>
+          <article class="night-poster-card" data-tilt>
+            <div class="night-poster-img-wrap">
+              <img src="media/img/poster-shahir.webp" width="1290" height="1710" loading="lazy" alt="Poster: Bolly Meets Hollywood with DJ Shahir Alam">
+              <div class="poster-overlay-glow"></div>
+            </div>
+            <div class="night-details">
+              <span class="night-tag">Weekend Nightclub Energy</span>
+              <h3>Bolly Meets Hollywood with DJ Shahir</h3>
+              <p>Bollywood anthems & international bangers at the open-air island bar.</p>
+              <a class="btn btn-small btn-solid" href="https://wa.me/919845012345?text=Hi%20Mac%20Brew%20Farm,%20I%20would%20like%20to%20reserve%20a%20table%20for%20DJ%20Shahir%20Alam%20night." target="_blank" rel="noopener">RSVP on WhatsApp</a>
+            </div>
+          </article>
         </div>
       </div>
     </section>
 
-    <!-- FEAST (video grows on scroll) -->
-    <section class="feast opaque" id="feast" aria-labelledby="feastTitle">
-      <div class="feast-stage">
-        <h2 class="feast-line feast-line-1 display" id="feastTitle">Started with a drink.</h2>
-        <div class="feast-card">
-          <video id="feastVideo" muted loop playsinline preload="none" poster="media/video/feast-table.webp" aria-label="A table slowly filling with cocktails and dishes">
-            <source src="media/video/feast-table.mp4" type="video/mp4">
-          </video>
-        </div>
-        <p class="feast-line feast-line-2 display">Ended with a feast.</p>
-      </div>
-    </section>
-
-    <!-- MENU -->
+    <!-- DIGITAL MENU SECTION (SEARCHABLE & FILTERABLE) -->
     <section class="menu opaque" id="menu" aria-labelledby="menuTitle">
       <div class="wrap">
         <div class="menu-head">
-          <div>
+          <div class="menu-head-text">
+            <span class="menu-badge-pill">Complete Selection</span>
             <h2 class="display" id="menuTitle">What's good here? Everything.</h2>
-            <p class="lede">Cocktails, salads, mains and desserts. Prices are in rupees.</p>
+            <p class="lede">Browse cocktails, artisan salads, global mains, and decadent desserts. Prices are in Indian Rupees (₹).</p>
           </div>
-          <figure class="menu-fig"><img src="media/img/oreo-silhouette.webp" width="1290" height="1710" loading="lazy" alt="Silhouette of a woman about to bite an Oreo cookie stamped with the Mac Brew Farm emblem, set on a chocolate cocktail"></figure>
+          <figure class="menu-fig" data-tilt>
+            <img src="media/img/oreo-silhouette.webp" width="1290" height="1710" loading="lazy" alt="Woman holding stamped Mac Brew Farm Oreo cocktail">
+          </figure>
         </div>
         <div id="menuApp"></div>
       </div>
     </section>
 
-    <!-- NIGHTS -->
-    <section class="nights opaque" id="nights" aria-labelledby="nightsTitle">
-      <div class="wrap">
-        <h2 class="display" id="nightsTitle">Live nights</h2>
-        <p class="lede">Recent line-ups. Follow us for the next one.</p>
-        <div class="nights-grid">
-          <article class="night">
-            <div class="night-poster" data-tilt>
-              <img src="media/img/poster-bhavya.webp" width="1290" height="1714" loading="lazy" alt="Poster: Live music with singer Bhavya, 25 September, 7:30 PM onwards">
-            </div>
-            <h3>Live music with Bhavya</h3>
-            <p>25 September, 7:30 PM onwards</p>
-          </article>
-          <article class="night">
-            <div class="night-poster" data-tilt>
-              <img src="media/img/poster-shahir.webp" width="1290" height="1710" loading="lazy" alt="Poster: Bolly Meets Hollywood with DJ Shahir Alam, 18 and 19 September, 9 PM onwards">
-            </div>
-            <h3>Bolly Meets Hollywood with DJ Shahir Alam</h3>
-            <p>18 and 19 September, 9 PM onwards. Bollywood bangers and Hollywood anthems.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- REELS -->
-    <section class="reels opaque" id="reels" aria-labelledby="reelsTitle">
-      <div class="wrap">
-        <h2 class="display" id="reelsTitle">Take a look around</h2>
-        <div class="reels-grid">
-          <figure class="reel">
-            <video muted loop playsinline preload="none" poster="media/video/reel-good-food.webp" data-src="media/video/reel-good-food.mp4" aria-label="Dishes and cocktails from the Mac Brew Farm kitchen and bar"></video>
-            <figcaption>Good food. Great pours. Even better vibes.</figcaption>
-          </figure>
-          <figure class="reel">
-            <video muted loop playsinline preload="none" poster="media/video/reel-ambience.webp" data-src="media/video/reel-ambience.mp4" aria-label="The building, fountain, food and drinks at Mac Brew Farm"></video>
-            <figcaption>Great ambience. Great food. Great vibes.</figcaption>
-          </figure>
-          <figure class="reel">
-            <video muted loop playsinline preload="none" poster="media/video/reel-golden-hour.webp" data-src="media/video/reel-golden-hour.mp4" aria-label="A walk through the lit-up spaces and bar at Mac Brew Farm"></video>
-            <figcaption>A little green. A little golden hour.</figcaption>
-          </figure>
-        </div>
-      </div>
-    </section>
-
-    <!-- VISIT -->
+    <!-- VISIT & CONTACT -->
     <section class="visit opaque" id="visit" aria-labelledby="visitTitle">
       <div class="wrap visit-grid">
-        <figure class="visit-fig">
-          <img src="media/img/three-cocktails.webp" width="1290" height="1708" loading="lazy" alt="Hands holding three cocktails: a creamy one with the Mac Brew Farm emblem in cocoa, a pink one and a pineapple one">
+        <figure class="visit-fig" data-tilt>
+          <img src="media/img/three-cocktails.webp" width="1290" height="1708" loading="lazy" alt="Three cocktails held together at golden hour: creamy chocolate, ruby berry, and pineapple solstice">
         </figure>
         <div class="visit-copy">
-          <h2 class="display" id="visitTitle">Find us</h2>
-          <p class="lede">Open the map for directions to Mac Brew Farm in Bengaluru.</p>
+          <span class="visit-badge-pill">Find Your Table</span>
+          <h2 class="display" id="visitTitle">Come for the Pours. Stay for the Vibes.</h2>
+          <p class="lede">Open daily for leisurely lunches, golden hour catch-ups, and vibrant late-night gatherings in Bengaluru.</p>
           <dl class="visit-info" id="visitInfo"></dl>
           <div class="visit-cta" id="visitCta">
-            <a class="btn btn-dark" href="https://maps.app.goo.gl/RtQ9ZF1NsLNxJRQh9?g_st=ic" target="_blank" rel="noopener">Get directions</a>
+            <a class="btn btn-dark" href="https://maps.app.goo.gl/RtQ9ZF1NsLNxJRQh9?g_st=ic" target="_blank" rel="noopener">Open in Google Maps</a>
           </div>
-          <img class="visit-logo" src="media/img/logo-forest.png" width="200" height="302" loading="lazy" alt="Mac Brew Farm logo">
+          <img class="visit-logo" src="media/img/logo-forest.png" width="200" height="302" loading="lazy" alt="Mac Brew Farm Logo">
         </div>
       </div>
     </section>
   </main>
 
+  <!-- FOOTER -->
   <footer class="footer opaque">
     <div class="wrap footer-grid">
-      <img src="media/img/logo-cream.png" width="120" height="181" loading="lazy" alt="Mac Brew Farm">
-      <nav aria-label="Footer">
-        <a href="#cocktails">Cocktails</a>
-        <a href="#menu">Menu</a>
-        <a href="#nights">Nights</a>
+      <div class="footer-brand-col">
+        <img class="footer-logo" src="media/img/logo-cream.png" width="140" height="211" loading="lazy" alt="Mac Brew Farm">
+        <p class="footer-tagline">Good food. Great pours. Even better vibes.</p>
+      </div>
+      <nav class="footer-nav" aria-label="Footer Navigation">
+        <a href="#cocktails">Cocktails & Brews</a>
+        <a href="#theater">Experience</a>
+        <a href="#spaces">Spaces</a>
+        <a href="#kitchen">Kitchen</a>
+        <a href="#nights">Live Nights</a>
+        <a href="#menu">Digital Menu</a>
         <a href="#visit">Visit</a>
       </nav>
-      <p class="notice">Please drink responsibly. Alcohol is served only to guests of legal drinking age.</p>
-      <p class="copy">&copy; <span id="year">2026</span> Mac Brew Farm, Bengaluru.</p>
+      <div class="footer-notes">
+        <p class="notice">Please drink responsibly. Alcohol is served only to guests of legal drinking age.</p>
+        <p class="copy">&copy; <span id="year">2026</span> Mac Brew Farm, Bengaluru. All rights reserved.</p>
+      </div>
     </div>
   </footer>
 </body>

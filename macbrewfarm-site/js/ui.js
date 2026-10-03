@@ -68,7 +68,7 @@ export function initUI({ reduce }) {
     if (wasOpen) toggle.blur();
   });
 
-  // --- custom cursor (mouse devices only) ---
+  // --- custom cursor & magnetic attraction (mouse devices only) ---
   const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
   const cursor = document.getElementById('cursor');
   if (fine && !reduce && cursor) {
@@ -83,15 +83,95 @@ export function initUI({ reduce }) {
     document.addEventListener('pointerleave', () => root.classList.remove('has-cursor'));
     document.addEventListener('pointerenter', () => { if (seen) root.classList.add('has-cursor'); });
     document.addEventListener('mouseover', (e) => {
-      const hot = e.target.closest && e.target.closest('a, button, [data-tilt], .menu-tab, .dish.has-img');
+      const hot = e.target.closest && e.target.closest('a, button, [data-tilt], .ck-thumb-card, .space-card, .vt-mini-card');
       root.classList.toggle('cursor-hover', !!hot);
     });
     (function loop() {
-      rx += (mx - rx) * 0.2;
-      ry += (my - ry) * 0.2;
+      rx += (mx - rx) * 0.22;
+      ry += (my - ry) * 0.22;
       dot.style.transform = `translate3d(${mx}px, ${my}px, 0)`;
       ring.style.transform = `translate3d(${rx}px, ${ry}px, 0)`;
       requestAnimationFrame(loop);
     })();
+
+    // Magnetic buttons
+    const magneticSelector = '.btn, .ck-arrow-btn, .spaces-arrow-btn, .vt-play-pause-btn, .vt-audio-btn';
+    document.querySelectorAll(magneticSelector).forEach((el) => {
+      el.addEventListener('pointermove', (e) => {
+        const r = el.getBoundingClientRect();
+        const cx = r.left + r.width / 2;
+        const cy = r.top + r.height / 2;
+        const dx = (e.clientX - cx) * 0.28;
+        const dy = (e.clientY - cy) * 0.28;
+        el.style.transform = `translate3d(${dx.toFixed(1)}px, ${dy.toFixed(1)}px, 0)`;
+      });
+      el.addEventListener('pointerleave', () => {
+        el.style.transform = '';
+      });
+    });
+  }
+
+  // --- Ambient Garden Atmosphere Synth (Web Audio API) ---
+  let audioCtx = null;
+  let noiseNode = null;
+  let gainNode = null;
+  let isAmbiencePlaying = false;
+
+  function toggleGardenAmbience(btn) {
+    if (!audioCtx) {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContext) return;
+      audioCtx = new AudioContext();
+
+      // Generate soft filtered stream / garden breeze noise
+      const bufferSize = audioCtx.sampleRate * 2;
+      const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+      const output = noiseBuffer.getChannelData(0);
+      let b0 = 0, b1 = 0, b2 = 0;
+      for (let i = 0; i < bufferSize; i++) {
+        const white = Math.random() * 2 - 1;
+        b0 = 0.99 * b0 + white * 0.05;
+        b1 = 0.95 * b1 + white * 0.05;
+        b2 = 0.85 * b2 + white * 0.05;
+        output[i] = (b0 + b1 + b2) * 0.07;
+      }
+
+      const whiteNoise = audioCtx.createBufferSource();
+      whiteNoise.buffer = noiseBuffer;
+      whiteNoise.loop = true;
+
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.value = 650;
+
+      gainNode = audioCtx.createGain();
+      gainNode.gain.setValueAtTime(0.01, audioCtx.currentTime);
+
+      whiteNoise.connect(filter);
+      filter.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
+      whiteNoise.start(0);
+      noiseNode = whiteNoise;
+    }
+
+    if (audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
+
+    isAmbiencePlaying = !isAmbiencePlaying;
+    if (isAmbiencePlaying) {
+      gainNode.gain.setTargetAtTime(0.06, audioCtx.currentTime, 0.4);
+      if (btn) btn.classList.add('is-active');
+      if (btn) btn.setAttribute('aria-pressed', 'true');
+    } else {
+      gainNode.gain.setTargetAtTime(0.0001, audioCtx.currentTime, 0.3);
+      if (btn) btn.classList.remove('is-active');
+      if (btn) btn.setAttribute('aria-pressed', 'false');
+    }
+  }
+
+  const ambienceToggleBtn = document.getElementById('ambienceAudioToggle');
+  if (ambienceToggleBtn) {
+    ambienceToggleBtn.addEventListener('click', () => toggleGardenAmbience(ambienceToggleBtn));
   }
 }

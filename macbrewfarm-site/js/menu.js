@@ -1,4 +1,7 @@
-// Menu: tabs + a printed-menu style sheet that re-themes per tab.
+// ---------------------------------------------------------------------------
+// Mac Brew Farm: Filterable, Searchable Digital Menu
+// Real prices, dietary badges, image previews, and responsive tabs
+// ---------------------------------------------------------------------------
 import { menu } from './data.js';
 
 function h(tag, props, ...kids) {
@@ -14,163 +17,221 @@ function h(tag, props, ...kids) {
   kids.flat().forEach((kid) => { if (kid != null) el.append(kid); });
   return el;
 }
-const hop = () => {
-  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-  svg.setAttribute('class', 'hop');
-  svg.setAttribute('aria-hidden', 'true');
-  const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
-  use.setAttribute('href', '#hop');
-  svg.append(use);
-  return svg;
-};
 
 export function initMenu({ animate }) {
   const host = document.getElementById('menuApp');
   if (!host) return;
 
-  const tabsEl = h('div', { class: 'menu-tabs', role: 'tablist', 'aria-label': 'Menu sections' });
-  const ink = h('span', { class: 'tab-ink', 'aria-hidden': 'true' });
-  const tabs = menu.map((m, i) => {
-    const b = h('button', {
-      class: 'menu-tab', type: 'button', role: 'tab', id: 'tab-' + m.id,
-      'aria-controls': 'menuPanel', 'aria-selected': 'false', tabindex: '-1', text: m.label,
-    });
-    b.addEventListener('click', () => select(i, true));
-    tabsEl.append(b);
-    return b;
-  });
-  tabsEl.append(ink);
+  let currentTab = 0;
+  let searchQuery = '';
+  let dietaryFilter = 'all'; // 'all', 'veg', 'non-veg'
 
-  const titleH = h('h3');
-  const title = h('div', { class: 'sheet-title' }, h('span', { class: 'line' }), hop(), titleH, hop(), h('span', { class: 'line' }));
-  const note = h('p', { class: 'sheet-note' });
-  const body = h('div', { class: 'sheet-body' });
-  const sheet = h('div', { class: 'sheet', id: 'menuPanel', role: 'tabpanel', tabindex: '0' },
-    h('div', { class: 'sheet-head' }, h('div', { class: 'sheet-badge' }, h('img', { src: 'media/img/mark-cream.png', alt: '', width: '64', height: '66' }))),
-    title, note, body);
-  host.append(tabsEl, sheet);
+  host.innerHTML = `
+    <div class="menu-control-bar">
+      <div class="menu-search-box">
+        <svg class="menu-search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <input class="menu-search-input" id="menuSearchInput" type="search" placeholder="Search cocktails, pasta, khausuey, cheesecake..." aria-label="Search menu items">
+        <button class="menu-search-clear" id="menuSearchClear" type="button" aria-label="Clear search" hidden>&times;</button>
+      </div>
 
-  // ---- rows ----
-  function dish(item, columns) {
-    const main = h('div', { class: 'dish-main' });
-    const line = h('div', { class: 'dish-line' }, h('h4', { text: item.name }));
-    if (item.prices) {
-      line.append(h('span', { class: 'dots', 'aria-hidden': 'true' }),
-        h('span', { class: 'p3' }, item.prices.map((p, i) => h('span', null, String(p), h('i', { text: columns ? columns[i] : '' })))));
-    } else if (item.price != null) {
-      line.append(h('span', { class: 'dots', 'aria-hidden': 'true' }), h('span', { class: 'price', text: String(item.price) }));
+      <div class="menu-diet-filter" role="radiogroup" aria-label="Dietary preferences">
+        <button class="diet-btn is-active" data-diet="all" type="button">All Items</button>
+        <button class="diet-btn" data-diet="veg" type="button"><span class="diet-dot veg"></span>Veg</button>
+        <button class="diet-btn" data-diet="non-veg" type="button"><span class="diet-dot non-veg"></span>Non-Veg</button>
+      </div>
+    </div>
+
+    <div class="menu-tabs-track" role="tablist" aria-label="Menu categories" id="menuTabs">
+      ${menu.map((m, i) => `
+        <button class="menu-tab-btn ${i === 0 ? 'is-active' : ''}" type="button" role="tab" id="tab-${m.id}" data-index="${i}">
+          ${m.label}
+        </button>
+      `).join('')}
+    </div>
+
+    <div class="menu-sheet-panel" id="menuSheetPanel" role="tabpanel" tabindex="0">
+      <div class="sheet-header">
+        <div class="sheet-title-row">
+          <h3 class="display sheet-section-title" id="sheetTitle">${menu[0].title}</h3>
+          <span class="sheet-item-count" id="sheetCount"></span>
+        </div>
+      </div>
+      <div class="sheet-content" id="sheetContent"></div>
+    </div>
+  `;
+
+  const searchInput = host.querySelector('#menuSearchInput');
+  const searchClear = host.querySelector('#menuSearchClear');
+  const dietBtns = host.querySelectorAll('.diet-btn');
+  const tabBtns = host.querySelectorAll('.menu-tab-btn');
+  const sheetTitle = host.querySelector('#sheetTitle');
+  const sheetCount = host.querySelector('#sheetCount');
+  const sheetContent = host.querySelector('#sheetContent');
+  const sheetPanel = host.querySelector('#menuSheetPanel');
+
+  function matchesItem(it) {
+    const q = searchQuery.toLowerCase().trim();
+    const nameMatch = !q || (it.name && it.name.toLowerCase().includes(q));
+    const descMatch = !q || (it.desc && it.desc.toLowerCase().includes(q));
+    const tagMatch = !q || (it.tag && it.tag.toLowerCase().includes(q));
+    const textMatches = nameMatch || descMatch || tagMatch;
+
+    if (!textMatches) return false;
+    if (dietaryFilter === 'all') return true;
+    if (dietaryFilter === 'veg' && it.diet === 'veg') return true;
+    if (dietaryFilter === 'non-veg' && (it.diet === 'non-veg' || it.diet === 'veg-nonveg')) return true;
+    return false;
+  }
+
+  function renderDishRow(it, columns) {
+    const li = h('div', { class: 'menu-dish-item' + (it.img ? ' has-photo' : '') });
+
+    // Dish Media if available
+    if (it.img) {
+      const thumb = h('div', { class: 'dish-item-photo' },
+        h('img', { src: it.img, alt: it.name, width: '70', height: '70', loading: 'lazy' })
+      );
+      li.append(thumb);
     }
-    main.append(line);
-    if (item.desc) main.append(h('p', { class: 'dish-desc', text: item.desc }));
-    const li = h('li', { class: 'dish' + (item.img ? ' has-img' : '') }, main);
-    if (item.img) {
-      li.dataset.img = item.img;
-      li.append(h('img', { class: 'dish-thumb', src: item.img, alt: '', width: '56', height: '56', loading: 'lazy' }));
+
+    const info = h('div', { class: 'dish-item-info' });
+    const titleRow = h('div', { class: 'dish-item-head' });
+
+    // Diet mark
+    const dietMark = h('span', { class: 'dish-diet-mark ' + (it.diet === 'veg' ? 'veg' : 'non-veg'), title: it.diet || 'Special' });
+    const nameSpan = h('span', { class: 'dish-item-name', text: it.name });
+
+    titleRow.append(dietMark, nameSpan);
+
+    // Price
+    if (it.prices) {
+      const priceGroup = h('div', { class: 'dish-prices-row' });
+      it.prices.forEach((p, idx) => {
+        const colLabel = columns ? columns[idx] : '';
+        priceGroup.append(h('span', { class: 'dish-multi-price' },
+          h('span', { class: 'p-val', text: '₹' + p }),
+          h('span', { class: 'p-col', text: colLabel })
+        ));
+      });
+      titleRow.append(h('span', { class: 'dish-leader' }), priceGroup);
+    } else if (it.price != null) {
+      titleRow.append(h('span', { class: 'dish-leader' }), h('span', { class: 'dish-single-price', text: '₹' + it.price }));
     }
+
+    info.append(titleRow);
+
+    if (it.desc) {
+      info.append(h('p', { class: 'dish-item-desc', text: it.desc }));
+    }
+
+    li.append(info);
     return li;
   }
 
-  function fill(m) {
-    const list = h('ul', { class: 'dish-list' });
-    if (m.groups) {
-      m.groups.forEach((g) => {
-        list.append(h('li', { class: 'group', text: g.label }));
-        g.items.forEach((it) => list.append(dish(it, m.columns)));
-      });
-    } else {
-      m.items.forEach((it) => list.append(dish(it, m.columns)));
+  function renderActiveMenu() {
+    const currentMenuData = menu[currentTab];
+    sheetTitle.textContent = searchQuery ? `Search Results for "${searchQuery}"` : currentMenuData.title;
+
+    sheetContent.innerHTML = '';
+    let totalFound = 0;
+
+    // If searching across all or viewing single category
+    const sectionsToSearch = searchQuery ? menu : [currentMenuData];
+
+    sectionsToSearch.forEach((section) => {
+      const matches = [];
+
+      if (section.groups) {
+        section.groups.forEach((g) => {
+          const groupMatches = g.items.filter(matchesItem);
+          if (groupMatches.length > 0) {
+            matches.push({ label: g.label, items: groupMatches, columns: section.columns });
+          }
+        });
+      } else if (section.items) {
+        const directMatches = section.items.filter(matchesItem);
+        if (directMatches.length > 0) {
+          matches.push({ label: searchQuery ? section.label : '', items: directMatches, columns: section.columns });
+        }
+      }
+
+      if (matches.length > 0) {
+        matches.forEach((group) => {
+          if (group.label) {
+            const groupHead = h('h4', { class: 'dish-group-header', text: group.label });
+            sheetContent.append(groupHead);
+          }
+          const groupList = h('div', { class: 'dish-group-list' });
+          group.items.forEach((item) => {
+            totalFound++;
+            groupList.append(renderDishRow(item, group.columns));
+          });
+          sheetContent.append(groupList);
+        });
+      }
+    });
+
+    if (totalFound === 0) {
+      sheetContent.innerHTML = `
+        <div class="menu-empty-state">
+          <p>No dishes or drinks match your filter.</p>
+          <button class="btn btn-small" id="resetMenuFilterBtn" type="button">Reset Filters</button>
+        </div>
+      `;
+      const resetBtn = sheetContent.querySelector('#resetMenuFilterBtn');
+      if (resetBtn) {
+        resetBtn.addEventListener('click', () => {
+          searchQuery = '';
+          searchInput.value = '';
+          searchClear.hidden = true;
+          dietaryFilter = 'all';
+          dietBtns.forEach((b) => b.classList.toggle('is-active', b.getAttribute('data-diet') === 'all'));
+          renderActiveMenu();
+        });
+      }
     }
-    body.textContent = '';
-    body.append(list);
-    titleH.textContent = m.title;
-    note.textContent = m.note || '';
-    note.hidden = !m.note;
-    sheet.style.setProperty('--band', m.theme.band);
-    sheet.style.setProperty('--ink', m.theme.ink);
-    sheet.style.setProperty('--badge', m.theme.badge);
-    sheet.setAttribute('aria-labelledby', 'tab-' + m.id);
-    return list;
+
+    sheetCount.textContent = `${totalFound} item${totalFound === 1 ? '' : 's'}`;
+
+    if (currentMenuData.theme) {
+      sheetPanel.style.setProperty('--panel-band', currentMenuData.theme.band);
+    }
   }
 
-  // ---- tabs ----
-  let current = -1;
-  function placeInk() {
-    const t = tabs[current];
-    if (!t) return;
-    tabsEl.style.setProperty('--x', t.offsetLeft + 'px');
-    tabsEl.style.setProperty('--w', t.offsetWidth + 'px');
-  }
-  function select(i, fromUser) {
-    if (i === current) return;
-    current = i;
-    tabs.forEach((t, k) => {
-      t.setAttribute('aria-selected', String(k === i));
-      t.tabIndex = k === i ? 0 : -1;
-    });
-    const list = fill(menu[i]);
-    placeInk();
-    // keep the chosen tab visible in the horizontal strip on small screens
-    const t = tabs[i];
-    tabsEl.scrollTo({ left: Math.max(0, t.offsetLeft - (tabsEl.clientWidth - t.offsetWidth) / 2), behavior: animate ? 'smooth' : 'auto' });
-    if (fromUser && animate && window.gsap) {
-      const rows = list.children;
-      gsap.from(rows, {
-        y: 18, autoAlpha: 0, duration: 0.5, ease: 'power3.out', clearProps: 'all',
-        stagger: Math.min(0.035, 0.7 / Math.max(1, rows.length)),
-      });
-    }
-  }
-  tabsEl.addEventListener('keydown', (e) => {
-    const k = e.key;
-    if (!['ArrowRight', 'ArrowLeft', 'Home', 'End'].includes(k)) return;
-    e.preventDefault();
-    let n = current;
-    if (k === 'ArrowRight') n = (current + 1) % tabs.length;
-    if (k === 'ArrowLeft') n = (current - 1 + tabs.length) % tabs.length;
-    if (k === 'Home') n = 0;
-    if (k === 'End') n = tabs.length - 1;
-    select(n, true);
-    tabs[n].focus();
+  // Event handlers
+  searchInput.addEventListener('input', (e) => {
+    searchQuery = e.target.value;
+    searchClear.hidden = !searchQuery;
+    renderActiveMenu();
   });
-  select(0, false);
-  window.addEventListener('resize', placeInk);
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(placeInk);
 
-  // ---- hover image that follows the pointer (mouse only) ----
-  if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
-    const fig = h('figure', { class: 'hover-img', 'aria-hidden': 'true' }, h('img', { alt: '', width: '224', height: '224' }));
-    document.body.append(fig);
-    const im = fig.firstChild;
-    const S = 224;
-    let tx = 0, ty = 0, x = 0, y = 0, on = false, raf = 0;
-    const loop = () => {
-      x += (tx - x) * 0.18;
-      y += (ty - y) * 0.18;
-      fig.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-      raf = on || Math.abs(tx - x) > 0.5 || Math.abs(ty - y) > 0.5 ? requestAnimationFrame(loop) : 0;
-    };
-    const aim = (e) => {
-      tx = Math.min(e.clientX + 28, window.innerWidth - S - 12);
-      ty = Math.max(12, Math.min(e.clientY - S / 2, window.innerHeight - S - 12));
-    };
-    body.addEventListener('mouseover', (e) => {
-      const li = e.target.closest('.dish.has-img');
-      if (!li) return;
-      if (!on) { aim(e); x = tx; y = ty; }
-      im.src = li.dataset.img;
-      on = true;
-      fig.classList.add('show');
-      if (!raf) raf = requestAnimationFrame(loop);
+  searchClear.addEventListener('click', () => {
+    searchQuery = '';
+    searchInput.value = '';
+    searchClear.hidden = true;
+    renderActiveMenu();
+  });
+
+  dietBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      dietBtns.forEach((b) => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+      dietaryFilter = btn.getAttribute('data-diet');
+      renderActiveMenu();
     });
-    body.addEventListener('mousemove', (e) => { if (on) aim(e); });
-    body.addEventListener('mouseout', (e) => {
-      const li = e.target.closest('.dish.has-img');
-      if (!li || li.contains(e.relatedTarget)) return;
-      on = false;
-      fig.classList.remove('show');
+  });
+
+  tabBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      tabBtns.forEach((b) => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+      currentTab = parseInt(btn.getAttribute('data-index'), 10);
+      searchQuery = '';
+      searchInput.value = '';
+      searchClear.hidden = true;
+      renderActiveMenu();
     });
-    // Tab change or scroll while hovering: hide it.
-    tabsEl.addEventListener('click', () => { on = false; fig.classList.remove('show'); });
-    window.addEventListener('scroll', () => { if (on) { on = false; fig.classList.remove('show'); } }, { passive: true });
-  }
+  });
+
+  renderActiveMenu();
 }
