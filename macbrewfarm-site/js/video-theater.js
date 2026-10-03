@@ -100,7 +100,7 @@ export function initVideoTheater({ isStatic, reduce }) {
 
       <div class="vt-stage">
         <div class="vt-screen-frame">
-          <video class="vt-video" id="vtActiveVideo" playsinline loop muted preload="auto" poster="${reels[0].poster}">
+          <video class="vt-video" id="vtActiveVideo" playsinline webkit-playsinline loop muted preload="auto" poster="${reels[0].poster}">
             <source src="${reels[0].video}" type="video/mp4">
           </video>
           <div class="vt-overlay-glow"></div>

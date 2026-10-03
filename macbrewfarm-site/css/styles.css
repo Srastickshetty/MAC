@@ -26,6 +26,10 @@
   --serif: 'Cormorant Garamond', Georgia, serif;
   --sans: 'Josefin Sans', system-ui, -apple-system, sans-serif;
   --gutter: clamp(1.25rem, 4vw, 4.5rem);
+  --sat: env(safe-area-inset-top, 0px);
+  --sar: env(safe-area-inset-right, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+  --sal: env(safe-area-inset-left, 0px);
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-soft: cubic-bezier(0.25, 1, 0.5, 1);
 }
@@ -34,6 +38,8 @@
 
 html {
   -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
   scroll-behavior: auto;
 }
 html.is-loading, html.is-loading body { overflow: hidden; }
@@ -50,8 +56,8 @@ body {
   font-size: 1.0625rem;
   line-height: 1.65;
   overflow-x: hidden;
-  overflow-x: clip;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 img, video, svg { display: block; max-width: 100%; }
@@ -169,14 +175,15 @@ a { color: inherit; text-decoration: none; }
 /* ---------- Header Navigation ---------- */
 .nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 60; display: flex; align-items: center;
-  justify-content: space-between; gap: 1.5rem; padding: 1rem var(--gutter);
+  justify-content: space-between; gap: 1.5rem;
+  padding: max(0.9rem, var(--sat)) max(var(--gutter), var(--sar)) 0.9rem max(var(--gutter), var(--sal));
   transition: background .4s var(--ease), backdrop-filter .4s var(--ease), padding .3s;
 }
 .nav.is-scrolled {
-  background: rgba(10, 26, 20, 0.82);
-  -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px);
+  background: rgba(10, 26, 20, 0.88);
+  -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--glass-border);
-  padding-block: 0.75rem;
+  padding-block: max(0.7rem, var(--sat)) 0.7rem;
 }
 .nav-brand { display: flex; align-items: center; gap: .85rem; color: var(--cream); }
 .nav-brand img { width: 38px; height: auto; }
@@ -195,16 +202,19 @@ a { color: inherit; text-decoration: none; }
 .nav-links a:hover::after { transform: scaleX(1); }
 .nav-cta { display: none; }
 .nav-toggle {
-  display: grid; gap: 6px; width: 44px; height: 44px; place-content: center; background: none; border: 0; cursor: pointer;
+  display: grid; gap: 6px; width: 48px; height: 48px; place-content: center; background: none; border: 0; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
-.nav-toggle span { display: block; width: 26px; height: 1.5px; background: var(--cream); transition: transform .3s var(--ease); }
-.nav-toggle[aria-expanded='true'] span:nth-child(1) { transform: translateY(3.75px) rotate(45deg); }
-.nav-toggle[aria-expanded='true'] span:nth-child(2) { transform: translateY(-3.75px) rotate(-45deg); }
+.nav-toggle span { display: block; width: 26px; height: 2px; background: var(--cream); border-radius: 1px; transition: transform .3s var(--ease); }
+.nav-toggle[aria-expanded='true'] span:nth-child(1) { transform: translateY(4px) rotate(45deg); }
+.nav-toggle[aria-expanded='true'] span:nth-child(2) { transform: translateY(-4px) rotate(-45deg); }
 
 .nav-overlay {
   position: fixed; inset: 0; z-index: 55; background: var(--forest-dark); display: flex; flex-direction: column;
-  justify-content: center; align-items: flex-start; gap: 2rem; padding: 6rem var(--gutter) 3rem;
+  justify-content: center; align-items: flex-start; gap: 2rem;
+  padding: max(6rem, calc(var(--sat) + 4.5rem)) max(var(--gutter), var(--sar)) max(3rem, calc(var(--sab) + 1.5rem)) max(var(--gutter), var(--sal));
   visibility: hidden; opacity: 0; transition: opacity .35s, visibility 0s .35s;
+  overflow-y: auto; -webkit-overflow-scrolling: touch;
 }
 .nav-overlay.open { visibility: visible; opacity: 1; transition: opacity .35s; }
 .nav-overlay nav { display: grid; gap: .6rem; }
@@ -247,8 +257,17 @@ html.cursor-hover .cursor-ring {
 
 /* ---------- Hero Section ---------- */
 .hero {
-  position: relative; min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column;
-  justify-content: flex-end; padding: clamp(6rem, 14vh, 9rem) var(--gutter) clamp(2.5rem, 6vh, 4rem);
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding-top: max(clamp(5.5rem, 12vh, 8.5rem), var(--sat));
+  padding-bottom: max(clamp(2rem, 5vh, 3.5rem), var(--sab));
+  padding-left: max(var(--gutter), var(--sal));
+  padding-right: max(var(--gutter), var(--sar));
   overflow: hidden;
 }
 .hero-video-wrap {
@@ -1216,14 +1235,324 @@ html.cursor-hover .cursor-ring {
 .footer-notes .copy { font-size: 0.82rem; opacity: 0.5; margin: 0; }
 
 /* ==========================================================================
-   Accessibility & Mobile Optimization
+   Mobile & Touchscreen Excellence Suite (iOS Safari & Android)
    ========================================================================== */
-@media (max-width: 640px) {
-  :root { --gutter: 1.25rem; }
-  .ck-stage-grid { gap: 1.8rem; }
-  .ck-feature-card { padding: 1.5rem; border-radius: 20px; }
-  .vt-screen-frame { border-radius: 18px; aspect-ratio: 4/3; }
-  .menu-sheet-panel { padding: 1.4rem; border-radius: 20px; }
+@media (max-width: 768px) {
+  :root {
+    --gutter: 1.15rem;
+  }
+
+  /* Typography & Headings */
+  .display {
+    line-height: 1.05;
+  }
+  .hero-tag {
+    font-size: 1.5rem;
+  }
+  .hero-sub {
+    font-size: 0.95rem;
+  }
+  .hero-cta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem;
+    width: 100%;
+  }
+  .hero-cta .btn {
+    width: 100%;
+    padding: 0 1rem;
+    font-size: 0.82rem;
+  }
+  .hero-cta .btn:first-child {
+    grid-column: 1 / -1;
+  }
+
+  /* Prevent iOS Safari auto-zoom on input focus */
+  input, select, textarea,
+  .res-input, .res-select, .menu-search-input {
+    font-size: 16px !important;
+  }
+
+  /* Cocktails Showcase on Mobile */
+  .ck-stage-grid {
+    gap: 1.5rem;
+  }
+  .ck-feature-card {
+    padding: 1.3rem;
+    border-radius: 22px;
+  }
+  .ck-feature-card .ck-active-name {
+    font-size: 1.85rem;
+  }
+  .ck-feature-card .ck-price-pill {
+    font-size: 1.5rem;
+  }
+  .ck-thumb-list {
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+    max-height: none;
+    padding-bottom: 0.8rem;
+    padding-top: 0.2rem;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x;
+    scrollbar-width: none;
+  }
+  .ck-thumb-list::-webkit-scrollbar {
+    display: none;
+  }
+  .ck-thumb-card {
+    flex: 0 0 250px;
+    scroll-snap-align: start;
+    padding: 0.65rem 0.85rem;
+  }
+
+  /* Cinematic Video Theater on Mobile */
+  .vt-screen-frame {
+    aspect-ratio: 1/1;
+    border-radius: 20px;
+  }
+  .vt-screen-header {
+    top: 0.85rem;
+    left: 0.85rem;
+    right: 0.85rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .vt-live-indicator {
+    font-size: 0.72rem;
+    padding: 0.3rem 0.7rem;
+  }
+  .vt-audio-btn {
+    padding: 0.45rem 0.95rem;
+    font-size: 0.8rem;
+    min-height: 40px;
+  }
+  .vt-screen-footer {
+    bottom: 0.85rem;
+    left: 0.85rem;
+    right: 0.85rem;
+    gap: 1rem;
+  }
+  .vt-caption-title {
+    font-size: 1.5rem;
+  }
+  .vt-caption-sub {
+    font-size: 0.84rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .vt-cards-carousel {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x;
+    padding-bottom: 0.8rem;
+    gap: 0.9rem;
+    scrollbar-width: none;
+  }
+  .vt-cards-carousel::-webkit-scrollbar {
+    display: none;
+  }
+  .vt-mini-card {
+    flex: 0 0 210px;
+    scroll-snap-align: start;
+  }
+
+  /* Mixology Lab */
+  .lab-grid {
+    gap: 1.8rem;
+  }
+  .lab-step-group {
+    padding: 1.2rem;
+    border-radius: 18px;
+  }
+  .lab-result-card {
+    padding: 1.4rem;
+    border-radius: 22px;
+  }
+  .lab-drink-name {
+    font-size: 1.8rem;
+  }
+
+  /* Digital Menu on Mobile */
+  .menu-fig {
+    display: none;
+  }
+  .menu-head {
+    margin-bottom: 1.5rem;
+  }
+  .menu-sheet-panel {
+    padding: 1.25rem 0.9rem;
+    border-radius: 20px;
+  }
+  .sheet-header {
+    margin-bottom: 1.2rem;
+  }
+  .sheet-section-title {
+    font-size: 1.6rem;
+  }
+  .dish-item-photo {
+    width: 52px;
+    height: 52px;
+    border-radius: 10px;
+  }
+  .dish-item-name {
+    font-size: 1.12rem;
+  }
+  .dish-single-price {
+    font-size: 1.15rem;
+  }
+  .dish-leader {
+    display: none;
+  }
+  .dish-item-head {
+    justify-content: space-between;
+  }
+  .dish-item-desc {
+    font-size: 0.84rem;
+  }
+  .sheet-bottom-disclaimer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.8rem;
+  }
+
+  /* Spaces Carousel */
+  .space-card {
+    width: 80vw;
+    border-radius: 20px;
+  }
+  .spaces-cards-track {
+    gap: 1.2rem;
+  }
+
+  /* Venue Zones */
+  .zones-tab-pills {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 0.4rem;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .zones-tab-pills::-webkit-scrollbar {
+    display: none;
+  }
+  .zones-pill-btn {
+    white-space: nowrap;
+    flex: none;
+    font-size: 0.84rem;
+    padding: 0.45rem 1.1rem;
+  }
+  .zones-showcase-card {
+    border-radius: 20px;
+    gap: 1.2rem;
+  }
+  .zone-details {
+    padding: 1.3rem;
+  }
+  .zone-name {
+    font-size: 1.7rem;
+  }
+  .zone-vibe-metrics {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+  }
+
+  /* Live Nights Posters */
+  .night-poster-card {
+    border-radius: 22px;
+  }
+  .night-details {
+    padding: 1.3rem;
+  }
+  .night-details h3 {
+    font-size: 1.5rem;
+  }
+
+  /* Modals: Native Bottom Sheet Pattern for iPhone and Android */
+  .tc-modal-overlay,
+  .res-modal-overlay {
+    padding: 0;
+    align-items: flex-end;
+  }
+  .tc-modal-container,
+  .res-modal-container {
+    width: 100%;
+    max-width: 100%;
+    max-height: 92dvh;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-top-left-radius: 26px;
+    border-top-right-radius: 26px;
+    padding: 1.4rem 1.1rem max(1.5rem, var(--sab));
+    transform: translateY(100%);
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .tc-modal-overlay.is-open .tc-modal-container,
+  .res-modal-overlay.is-open .res-modal-container {
+    transform: translateY(0);
+  }
+  .tc-close-btn,
+  .res-close-btn {
+    top: 1rem;
+    right: 1rem;
+    width: 40px;
+    height: 40px;
+  }
+  .tc-modal-header {
+    padding: 0.6rem 0.2rem 0.8rem;
+  }
+  .tc-modal-title {
+    font-size: 1.6rem;
+  }
+  .tc-modal-body {
+    padding: 0.8rem 0.2rem;
+    gap: 1.2rem;
+  }
+  .res-zone-options {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.55rem;
+  }
+  .res-zone-card {
+    padding: 0.65rem 0.5rem;
+  }
+  .res-zone-name {
+    font-size: 0.78rem;
+  }
+}
+
+/* Touch Device Ergonomics (Finger Tap Target Minimums) */
+@media (pointer: coarse) {
+  .btn,
+  a.btn,
+  button.btn {
+    min-height: 46px;
+  }
+  .nav-toggle {
+    width: 48px;
+    height: 48px;
+  }
+  .diet-btn,
+  .menu-tab-btn,
+  .ck-tab-btn,
+  .vt-tab-btn,
+  .zones-pill-btn,
+  .lab-chip-btn {
+    min-height: 42px;
+    display: inline-flex;
+    align-items: center;
+  }
+  .ck-arrow-btn,
+  .spaces-arrow-btn,
+  .vt-play-pause-btn {
+    width: 46px;
+    height: 46px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
