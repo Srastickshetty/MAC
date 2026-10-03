@@ -11,3 +11,5 @@ Not invented, so left blank or flagged:
 8. **Age line:** footer says alcohol is served only to guests of legal drinking age. Confirm wording.
 9. **Logo:** a vector (SVG/AI) logo would be sharper than the cleaned PNG used.
 10. **Videos:** audio was removed to keep autoplay silent and files small. Higher-resolution originals are welcome.
+11. **Background Music (BGM):** Drop your preferred brewery/cafe lounge MP3 into `media/audio/lounge-bgm.mp3`. The video player will loop it across all reels with smooth fading.
+12. **Terms & Conditions:** Complete 12-section legal disclaimers implemented (5% GST, Karnataka Excise VAT, voluntary 10% service charge, food allergens, valet disclaimer, and 15-min table holding policy).

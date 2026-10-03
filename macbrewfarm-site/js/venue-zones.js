@@ -134,6 +134,8 @@ export function initVenueZones() {
 
     const waText = encodeURIComponent(`Hi Mac Brew Farm! I would like to reserve a table at "${z.name}" (${z.tag}) for tonight.`);
     bookBtn.href = `https://wa.me/919845012345?text=${waText}`;
+    bookBtn.setAttribute('data-zone', z.name);
+    bookBtn.setAttribute('data-open-reservation', 'true');
 
     if (window.gsap) {
       window.gsap.fromTo(img, { opacity: 0.3, scale: 0.96 }, { opacity: 1, scale: 1, duration: 0.4, ease: 'power2.out' });

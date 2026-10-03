@@ -55,8 +55,15 @@ export function initMenu({ animate }) {
           <h3 class="display sheet-section-title" id="sheetTitle">${menu[0].title}</h3>
           <span class="sheet-item-count" id="sheetCount"></span>
         </div>
+        <div class="sheet-price-note">
+          <span>Prices in ₹ • Government taxes extra • Discretionary 10% service charge added for staff welfare • <button class="menu-inline-tc-link tc-modal-trigger" type="button">T&C Apply</button></span>
+        </div>
       </div>
       <div class="sheet-content" id="sheetContent"></div>
+      <div class="sheet-bottom-disclaimer">
+        <span>* Presentation may vary based on daily farm-fresh produce. Prices subject to change without prior notice. Right of admission reserved.</span>
+        <button class="menu-inline-tc-link tc-modal-trigger" type="button">*T&C Apply</button>
+      </div>
     </div>
   `;
 

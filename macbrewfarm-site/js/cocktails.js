@@ -114,8 +114,13 @@ export function initCocktails({ isStatic }) {
               </button>
             </div>
           </div>
-          <div class="ck-thumb-list" id="ckThumbList" role="listbox" aria-label="Cocktail selections"></div>
+          <div class="ck-thumb-list" id="ckThumbList" data-lenis-prevent role="listbox" aria-label="Cocktail selections"></div>
         </div>
+      </div>
+
+      <div class="ck-legal-strip">
+        <span class="ck-legal-text">🔞 <strong>Karnataka Excise Act Notice:</strong> Alcoholic beverages served strictly to patrons 21+ with valid government photo ID. Please drink responsibly. Don't drink and drive.</span>
+        <button type="button" class="ck-legal-link tc-modal-trigger">View Excise T&C →</button>
       </div>
     </div>
   `;
@@ -147,7 +152,7 @@ export function initCocktails({ isStatic }) {
       return `
         <button class="ck-thumb-card ${isSelected ? 'is-selected' : ''}" type="button" data-id="${c.id}" role="option" aria-selected="${isSelected}">
           <div class="ck-thumb-media">
-            <img src="${c.img || 'media/img/pomrita.webp'}" alt="${c.name}" width="90" height="90" loading="lazy">
+            <img src="${c.img || 'media/img/pomrita.webp'}" alt="" width="90" height="90" loading="lazy">
             <span class="ck-thumb-color-dot" style="background:${c.color}"></span>
           </div>
           <div class="ck-thumb-info">
@@ -169,6 +174,14 @@ export function initCocktails({ isStatic }) {
         if (idx !== -1) selectCocktail(idx);
       });
     });
+
+    // Auto-scroll selected thumbnail into view inside the list
+    setTimeout(() => {
+      const activeCard = thumbList.querySelector('.ck-thumb-card.is-selected');
+      if (activeCard) {
+        activeCard.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      }
+    }, 50);
   }
 
   // Update Highlight Display

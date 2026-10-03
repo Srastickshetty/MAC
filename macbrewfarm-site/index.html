@@ -117,12 +117,7 @@
       <a href="#menu">Digital Menu</a>
       <a href="#visit">Visit</a>
     </nav>
-    <div class="nav-atmosphere" role="radiogroup" aria-label="Farm Atmosphere">
-      <button class="atm-btn" data-mode="day" type="button" title="Sunlit Day Atmosphere">☀️</button>
-      <button class="atm-btn is-active" data-mode="golden" type="button" title="Golden Hour Atmosphere">🌅</button>
-      <button class="atm-btn" data-mode="night" type="button" title="Night Canopy Atmosphere">🌙</button>
-    </div>
-    <a class="btn btn-small nav-cta" href="https://maps.app.goo.gl/RtQ9ZF1NsLNxJRQh9?g_st=ic" target="_blank" rel="noopener">Find Us</a>
+    <button class="btn btn-small nav-cta btn-reserve-trigger" id="navReserveBtn" type="button">Book Table</button>
     <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navOverlay" aria-label="Open navigation">
       <span></span><span></span>
     </button>
@@ -141,15 +136,8 @@
       <a href="#menu">Digital Menu</a>
       <a href="#visit">Visit</a>
     </nav>
-    <div class="drawer-atmosphere">
-      <span>Atmosphere:</span>
-      <div class="nav-atmosphere">
-        <button class="atm-btn" data-mode="day" type="button">☀️ Day</button>
-        <button class="atm-btn is-active" data-mode="golden" type="button">🌅 Dusk</button>
-        <button class="atm-btn" data-mode="night" type="button">🌙 Night</button>
-      </div>
-    </div>
-    <a class="btn btn-solid" href="https://maps.app.goo.gl/RtQ9ZF1NsLNxJRQh9?g_st=ic" target="_blank" rel="noopener">Get Directions</a>
+    <button class="btn btn-solid drawer-reserve-btn btn-reserve-trigger" id="drawerReserveBtn" type="button" style="margin-bottom:0.75rem;">Book a Table</button>
+    <a class="btn btn-ghost" href="https://maps.app.goo.gl/RtQ9ZF1NsLNxJRQh9?g_st=ic" target="_blank" rel="noopener">Get Directions</a>
   </div>
 
   <!-- Custom Organic Cursor -->
@@ -187,11 +175,9 @@
           <p class="hero-sub">Signature craft cocktails, in-house beers, and a global kitchen under open-air canopies.</p>
         </div>
         <div class="hero-cta">
-          <a class="btn btn-solid" href="#cocktails">Explore Cocktails</a>
+          <button class="btn btn-solid btn-reserve-trigger" type="button">Book a Table</button>
+          <a class="btn btn-ghost" href="#cocktails">Explore Cocktails</a>
           <a class="btn btn-ghost" href="#menu">Digital Menu</a>
-          <button class="btn btn-ghost" id="ambienceAudioToggle" type="button" aria-pressed="false" title="Toggle atmospheric garden acoustics">
-            <span>🌿 Garden Sound</span>
-          </button>
           <a class="btn btn-ghost" href="https://maps.app.goo.gl/RtQ9ZF1NsLNxJRQh9?g_st=ic" target="_blank" rel="noopener">Directions</a>
         </div>
       </div>
@@ -305,7 +291,7 @@
               <span class="night-tag">Live Acoustic & Indie</span>
               <h3>Live Music with Bhavya</h3>
               <p>Evening acoustic vibes under the green canopy. Reserve for preferred pond-side seating.</p>
-              <a class="btn btn-small btn-solid" href="https://wa.me/919845012345?text=Hi%20Mac%20Brew%20Farm,%20I%20would%20like%20to%20reserve%20a%20table%20for%20Live%20Music%20with%20Bhavya." target="_blank" rel="noopener">RSVP on WhatsApp</a>
+              <button class="btn btn-small btn-solid btn-reserve-trigger" type="button" data-date="Live Music with Bhavya">RSVP & Book Table</button>
             </div>
           </article>
           <article class="night-poster-card" data-tilt>
@@ -317,7 +303,7 @@
               <span class="night-tag">Weekend Nightclub Energy</span>
               <h3>Bolly Meets Hollywood with DJ Shahir</h3>
               <p>Bollywood anthems & international bangers at the open-air island bar.</p>
-              <a class="btn btn-small btn-solid" href="https://wa.me/919845012345?text=Hi%20Mac%20Brew%20Farm,%20I%20would%20like%20to%20reserve%20a%20table%20for%20DJ%20Shahir%20Alam%20night." target="_blank" rel="noopener">RSVP on WhatsApp</a>
+              <button class="btn btn-small btn-solid btn-reserve-trigger" type="button" data-date="DJ Shahir Alam Night">RSVP & Book Table</button>
             </div>
           </article>
         </div>
@@ -331,13 +317,18 @@
           <div class="menu-head-text">
             <span class="menu-badge-pill">Complete Selection</span>
             <h2 class="display" id="menuTitle">What's good here? Everything.</h2>
-            <p class="lede">Browse cocktails, artisan salads, global mains, and decadent desserts. Prices are in Indian Rupees (₹).</p>
+            <p class="lede">Browse cocktails, artisan salads, global mains, and decadent desserts. Prices in Indian Rupees (₹) • Taxes & discretionary service charge extra • <button class="menu-inline-tc-link tc-modal-trigger" type="button">T&C Apply</button></p>
           </div>
           <figure class="menu-fig" data-tilt>
             <img src="media/img/oreo-silhouette.webp" width="1290" height="1710" loading="lazy" alt="Woman holding stamped Mac Brew Farm Oreo cocktail">
           </figure>
         </div>
         <div id="menuApp"></div>
+
+        <!-- Clean Menu Fine-Print Disclaimer -->
+        <p class="menu-disclaimer-note">
+          * Government taxes (5% GST & applicable State Excise VAT) extra. A discretionary 10% service charge is added for staff welfare (removable upon request). Presentation may vary based on daily farm-fresh produce. Prices subject to change without prior notice. Right of admission reserved. <button class="menu-inline-tc-link tc-modal-trigger" type="button">*T&C Apply</button>
+        </p>
       </div>
     </section>
 
@@ -378,7 +369,10 @@
         <a href="#visit">Visit</a>
       </nav>
       <div class="footer-notes">
-        <p class="notice">Please drink responsibly. Alcohol is served only to guests of legal drinking age.</p>
+        <p class="notice">Please drink responsibly. Alcohol is served only to guests 21+ with valid government photo ID.</p>
+        <button class="footer-tc-trigger tc-modal-trigger" id="footerTcBtn" type="button">
+          ⚖️ View Complete Terms & Conditions, House Rules & Legal Disclaimers
+        </button>
         <p class="copy">&copy; <span id="year">2026</span> Mac Brew Farm, Bengaluru. All rights reserved.</p>
       </div>
     </div>

@@ -1,13 +1,82 @@
 // ---------------------------------------------------------------------------
 // Mac Brew Farm: Cinematic Real-World Video Theater
-// Interactive reel switcher with smooth crossfades and video controls
+// Interactive reel switcher with studio MP3 background audio support
 // ---------------------------------------------------------------------------
 import { reels } from './data.js';
+
+// ---------------------------------------------------------------------------
+// Real Studio Audio BGM Engine
+// Plays real recorded MP3 audio with smooth volume fading, looping across all reels
+// ---------------------------------------------------------------------------
+class RealAudioBGMEngine {
+  constructor(audioSrc) {
+    this.audio = new Audio(audioSrc || 'media/audio/lounge-bgm.mp3');
+    this.audio.loop = true;
+    this.audio.preload = 'auto';
+    this.audio.volume = 0;
+    this.isMuted = true;
+    this.isVideoPaused = false;
+    this.fadeInterval = null;
+
+    this.audio.addEventListener('error', () => {
+      // Graceful fallback if no audio file is provided yet
+      console.info('No custom media/audio/lounge-bgm.mp3 detected. Keeping audio silent.');
+    });
+  }
+
+  fadeTo(targetVolume, duration = 400, onComplete = null) {
+    if (this.fadeInterval) clearInterval(this.fadeInterval);
+    const stepTime = 30;
+    const steps = Math.max(1, duration / stepTime);
+    const startVolume = this.audio.volume;
+    const delta = (targetVolume - startVolume) / steps;
+    let currentStep = 0;
+
+    this.fadeInterval = setInterval(() => {
+      currentStep++;
+      const newVol = Math.min(1, Math.max(0, startVolume + delta * currentStep));
+      this.audio.volume = newVol;
+      if (currentStep >= steps) {
+        clearInterval(this.fadeInterval);
+        this.fadeInterval = null;
+        this.audio.volume = targetVolume;
+        if (onComplete) onComplete();
+      }
+    }, stepTime);
+  }
+
+  setMuted(muted) {
+    this.isMuted = muted;
+    this.syncPlayback();
+  }
+
+  setVideoPaused(paused) {
+    this.isVideoPaused = paused;
+    this.syncPlayback();
+  }
+
+  syncPlayback() {
+    if (this.isMuted || this.isVideoPaused) {
+      this.fadeTo(0, 300, () => {
+        if (this.isMuted || this.isVideoPaused) {
+          this.audio.pause();
+        }
+      });
+    } else {
+      if (this.audio.paused) {
+        const p = this.audio.play();
+        if (p && p.catch) p.catch(() => {});
+      }
+      this.fadeTo(0.4, 400);
+    }
+  }
+}
 
 export function initVideoTheater({ isStatic, reduce }) {
   const host = document.getElementById('videoTheaterApp');
   if (!host) return;
 
+  const bgmEngine = new RealAudioBGMEngine('media/audio/lounge-bgm.mp3');
   let activeIndex = 0;
   let isMuted = true;
 
@@ -43,7 +112,7 @@ export function initVideoTheater({ isStatic, reduce }) {
               <span class="vt-live-label" id="vtReelBadge">${reels[0].badge}</span>
             </div>
             <div class="vt-audio-wrap">
-              <button class="vt-audio-btn" id="vtAudioToggle" type="button" aria-label="Toggle Sound">
+              <button class="vt-audio-btn" id="vtAudioToggle" type="button" aria-label="Toggle Lounge BGM">
                 <svg class="vt-icon-muted" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><line x1="23" x2="1" y1="1" y2="23"/></svg>
                 <span id="vtAudioLabel">Sound Off</span>
               </button>
@@ -100,7 +169,7 @@ export function initVideoTheater({ isStatic, reduce }) {
   const tabBtns = host.querySelectorAll('.vt-tab-btn');
   const miniCards = host.querySelectorAll('.vt-mini-card');
 
-  // Video switch function
+  // Video switch function — smoothly switches video while real audio continues uninterrupted
   function switchReel(idx) {
     if (idx === activeIndex && video.src) return;
     activeIndex = idx;
@@ -124,17 +193,12 @@ export function initVideoTheater({ isStatic, reduce }) {
     video.style.opacity = '0.4';
     video.src = r.video;
     video.poster = r.poster;
-    video.muted = isMuted;
+    video.muted = true;
     video.load();
 
     const p = video.play();
     if (p && p.catch) {
-      p.catch(() => {
-        video.muted = true;
-        isMuted = true;
-        updateAudioUI();
-        video.play().catch(() => {});
-      });
+      p.catch(() => {});
     }
 
     setTimeout(() => {
@@ -153,20 +217,27 @@ export function initVideoTheater({ isStatic, reduce }) {
       : '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>';
   }
 
-  audioToggle.addEventListener('click', () => {
+  function toggleAudio() {
     isMuted = !isMuted;
-    video.muted = isMuted;
+    bgmEngine.setMuted(isMuted);
     updateAudioUI();
+  }
+
+  audioToggle.addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleAudio();
   });
 
   // Play / Pause Toggle
   playPauseBtn.addEventListener('click', () => {
     if (video.paused) {
       video.play();
+      bgmEngine.setVideoPaused(false);
       playPauseBtn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
       playPauseBtn.setAttribute('aria-label', 'Pause Video');
     } else {
       video.pause();
+      bgmEngine.setVideoPaused(true);
       playPauseBtn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
       playPauseBtn.setAttribute('aria-label', 'Play Video');
     }
@@ -201,8 +272,10 @@ export function initVideoTheater({ isStatic, reduce }) {
       entries.forEach((e) => {
         if (e.isIntersecting) {
           video.play().catch(() => {});
+          bgmEngine.setVideoPaused(false);
         } else {
           video.pause();
+          bgmEngine.setVideoPaused(true);
         }
       });
     }, { threshold: 0.25 });

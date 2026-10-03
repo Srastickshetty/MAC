@@ -11,9 +11,10 @@ import { initVideoTheater } from './video-theater.js';
 import { initMenu } from './menu.js';
 import { initSections } from './sections.js';
 import { initParticles } from './particles.js';
-import { initAtmosphere } from './atmosphere.js';
 import { initMixologyLab } from './mixology-lab.js';
 import { initVenueZones } from './venue-zones.js';
+import { initReservation } from './reservation.js';
+import { initTermsModalHandler } from './terms-modal.js';
 
 clearTimeout(window.__mbfFallback);
 
@@ -199,11 +200,12 @@ function boot() {
   setupBackground();
   initUI({ reduce });
   initParticles({ reduce });
-  initAtmosphere();
   initCocktails({ isStatic });
   initVideoTheater({ isStatic, reduce });
   initMixologyLab();
   initVenueZones();
+  initReservation();
+  initTermsModalHandler();
   initMenu({ animate: !isStatic });
   initSections({ isStatic, reduce });
 
