@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "outputDirectory": "macbrewfarm-site",
   "cleanUrls": true,
   "rewrites": [
     { "source": "/(.*)", "destination": "/macbrewfarm-site/$1" }
