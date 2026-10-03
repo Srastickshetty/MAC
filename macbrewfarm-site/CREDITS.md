@@ -1,0 +1,3 @@
+- Photos, videos, menu text, logo: Mac Brew Farm.
+- three.js (MIT), GSAP + ScrollTrigger (GSAP standard licence), Lenis (MIT): loaded from jsDelivr.
+- Fonts: Cormorant Garamond and Josefin Sans (SIL OFL) via Google Fonts.
