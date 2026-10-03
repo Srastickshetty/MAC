@@ -33,7 +33,6 @@ function initHero({ isStatic, reduce }) {
   const brew = $('.hero-brew');
   const chars = mac ? splitLetters(mac) : [];
   const copy = $$('.hero-tag, .hero-sub, .hero-live-badge');
-  const hud = $$('.farm-hud-bar, .farm-hud-hint');
   const btns = $$('.hero-cta .btn');
   const heroVideo = $('#heroVideo');
 
@@ -45,7 +44,6 @@ function initHero({ isStatic, reduce }) {
   // Pre-set initial states
   gsap.set(chars, { yPercent: 110, rotateZ: 3 });
   gsap.set(brew, { autoAlpha: 0, letterSpacing: '0.8em' });
-  gsap.set(hud, { autoAlpha: 0, y: -15 });
   gsap.set(copy, { autoAlpha: 0, y: 30 });
   gsap.set(btns, { autoAlpha: 0, y: 25 });
 
@@ -53,7 +51,6 @@ function initHero({ isStatic, reduce }) {
     const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
     tl.to(chars, { yPercent: 0, rotateZ: 0, duration: 1.2, stagger: 0.08 }, 0)
       .to(brew, { autoAlpha: 1, letterSpacing: '0.45em', duration: 1.5 }, 0.4)
-      .to(hud, { autoAlpha: 1, y: 0, duration: 0.8, stagger: 0.1 }, 0.6)
       .to(copy, { autoAlpha: 1, y: 0, duration: 0.9, stagger: 0.12 }, 0.8)
       .to(btns, { autoAlpha: 1, y: 0, duration: 0.7, stagger: 0.1 }, 1.1)
       .add(() => {

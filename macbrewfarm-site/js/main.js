@@ -10,7 +10,10 @@ import { initCocktails } from './cocktails.js';
 import { initVideoTheater } from './video-theater.js';
 import { initMenu } from './menu.js';
 import { initSections } from './sections.js';
-import { initFarmScene } from './realistic-farm-scene.js';
+import { initParticles } from './particles.js';
+import { initAtmosphere } from './atmosphere.js';
+import { initMixologyLab } from './mixology-lab.js';
+import { initVenueZones } from './venue-zones.js';
 
 clearTimeout(window.__mbfFallback);
 
@@ -195,18 +198,14 @@ function boot() {
   setupSmoothScroll();
   setupBackground();
   initUI({ reduce });
+  initParticles({ reduce });
+  initAtmosphere();
   initCocktails({ isStatic });
   initVideoTheater({ isStatic, reduce });
+  initMixologyLab();
+  initVenueZones();
   initMenu({ animate: !isStatic });
   initSections({ isStatic, reduce });
-
-  if (!reduce) {
-    try {
-      initFarmScene();
-    } catch (err) {
-      console.warn('3D Farm WebGL scene unavailable:', err);
-    }
-  }
 
   runPreloader();
 
