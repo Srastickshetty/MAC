@@ -1319,8 +1319,8 @@ html.cursor-hover .cursor-ring {
     filter: blur(28px);
   }
   .ck-image-box {
-    width: min(210px, 60vw);
-    height: min(210px, 60vw);
+    width: min(175px, 45vw);
+    height: min(175px, 45vw);
     aspect-ratio: 1 / 1;
     margin: 0 auto;
     border-radius: 16px;
@@ -1335,49 +1335,56 @@ html.cursor-hover .cursor-ring {
     object-position: center;
   }
   .ck-card-content {
-    gap: 0.75rem;
+    gap: 0.65rem;
     width: 100%;
   }
   .ck-meta-row {
-    margin-bottom: 0.1rem;
+    margin-bottom: 0.05rem;
   }
   .ck-flavor-cat {
-    font-size: 0.74rem;
+    font-size: 0.72rem;
   }
   .ck-feature-card .ck-active-name {
-    font-size: 1.55rem;
+    font-size: 1.45rem;
     line-height: 1.1;
   }
   .ck-feature-card .ck-price-pill {
-    font-size: 1.4rem;
+    font-size: 1.3rem;
   }
   .ck-active-tagline {
-    font-size: 0.88rem;
-    line-height: 1.35;
+    font-size: 0.84rem;
+    line-height: 1.3;
   }
   .ck-ingredients-box {
-    padding: 0.7rem 0.85rem;
-    border-radius: 12px;
+    padding: 0.6rem 0.75rem;
+    border-radius: 10px;
+  }
+  .ck-ing-label {
+    font-size: 0.7rem;
+    margin-bottom: 0.2rem;
   }
   .ck-active-desc {
-    font-size: 0.82rem;
-    line-height: 1.45;
+    font-size: 0.78rem;
+    line-height: 1.4;
   }
   .ck-chip-tag {
-    font-size: 0.72rem;
-    padding: 0.2rem 0.6rem;
+    font-size: 0.7rem;
+    padding: 0.18rem 0.55rem;
   }
   .ck-sensory-panel {
-    padding: 0.7rem 0.85rem;
-    border-radius: 12px;
-    gap: 0.45rem;
+    padding: 0.6rem 0.75rem;
+    border-radius: 10px;
+    gap: 0.35rem;
   }
   .ck-meter-grid {
     grid-template-columns: 1fr 1fr;
-    gap: 0.45rem 0.75rem;
+    gap: 0.35rem 0.65rem;
+  }
+  .ck-meter-track {
+    height: 4px;
   }
   .ck-meter-labels {
-    font-size: 0.72rem;
+    font-size: 0.68rem;
   }
   .ck-thumb-list {
     flex-direction: row;
@@ -1395,9 +1402,25 @@ html.cursor-hover .cursor-ring {
     display: none;
   }
   .ck-thumb-card {
-    flex: 0 0 250px;
+    flex: 0 0 205px;
     scroll-snap-align: start;
-    padding: 0.65rem 0.85rem;
+    padding: 0.55rem 0.75rem;
+    border-radius: 14px;
+    gap: 0.75rem;
+  }
+  .ck-thumb-media {
+    width: 52px;
+    height: 52px;
+    border-radius: 10px;
+  }
+  .ck-thumb-name {
+    font-size: 1.05rem;
+  }
+  .ck-thumb-price {
+    font-size: 0.88rem;
+  }
+  .ck-thumb-cat {
+    font-size: 0.7rem;
   }
 
   /* Cinematic Video Theater on Mobile */
