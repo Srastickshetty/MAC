@@ -384,6 +384,10 @@ html.cursor-hover .cursor-ring {
 /* Stage Grid: 3D Feature Card (Left) + Thumbnails Rail (Right) */
 .ck-stage-grid {
   display: grid; grid-template-columns: 1fr; gap: 2.5rem; align-items: start;
+  min-width: 0;
+}
+.ck-stage-grid > * {
+  min-width: 0;
 }
 @media (min-width: 992px) {
   .ck-stage-grid { grid-template-columns: 1.15fr 0.85fr; gap: 3.5rem; }
@@ -392,10 +396,16 @@ html.cursor-hover .cursor-ring {
 /* Feature 3D Card */
 .ck-feature-card {
   position: relative; background: rgba(16, 41, 31, 0.75); border: 1px solid var(--glass-border);
-  border-radius: 28px; padding: clamp(1.8rem, 3.5vw, 2.8rem); backdrop-filter: blur(20px);
+  border-radius: 28px; padding: clamp(1.8rem, 3.5vw, 2.8rem);
+  -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px);
   box-shadow: var(--card-shadow); display: grid; gap: 2rem; overflow: hidden;
   transition: transform 0.15s ease-out, border-color 0.4s;
-  transform-style: preserve-3d;
+  min-width: 0; max-width: 100%;
+}
+@media (hover: hover) and (pointer: fine) {
+  .ck-feature-card {
+    transform-style: preserve-3d;
+  }
 }
 @media (min-width: 768px) {
   .ck-feature-card { grid-template-columns: 0.9fr 1.1fr; align-items: center; }
@@ -414,9 +424,10 @@ html.cursor-hover .cursor-ring {
   position: relative; z-index: 1; aspect-ratio: 1; border-radius: 20px; overflow: hidden;
   border: 1px solid rgba(227, 199, 155, 0.25); background: rgba(0, 0, 0, 0.3);
   box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4);
+  width: 100%; max-width: 100%; min-width: 0;
 }
 .ck-active-img {
-  width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s var(--ease);
+  width: 100%; height: 100%; max-width: 100%; object-fit: cover; transition: transform 0.4s var(--ease);
 }
 .ck-feature-card:hover .ck-active-img { transform: scale(1.05); }
 
@@ -693,6 +704,10 @@ html.cursor-hover .cursor-ring {
 .lab-title { font-size: clamp(2.4rem, 5vw, 4rem); }
 .lab-grid {
   display: grid; grid-template-columns: 1fr; gap: 2.5rem; align-items: start;
+  min-width: 0;
+}
+.lab-grid > * {
+  min-width: 0;
 }
 @media (min-width: 992px) {
   .lab-grid { grid-template-columns: 1.15fr 0.85fr; gap: 3.5rem; }
@@ -700,6 +715,7 @@ html.cursor-hover .cursor-ring {
 
 .lab-selectors {
   display: flex; flex-direction: column; gap: 1.8rem;
+  min-width: 0; max-width: 100%;
 }
 .lab-step-group {
   background: rgba(16, 41, 31, 0.55); border: 1px solid var(--glass-border);
@@ -728,9 +744,11 @@ html.cursor-hover .cursor-ring {
 /* Result Reveal Card */
 .lab-result-card {
   position: relative; background: rgba(16, 41, 31, 0.75); border: 1.5px solid var(--gold);
-  border-radius: 28px; padding: clamp(1.8rem, 3.5vw, 2.8rem); backdrop-filter: blur(20px);
+  border-radius: 28px; padding: clamp(1.8rem, 3.5vw, 2.8rem);
+  -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px);
   box-shadow: var(--card-shadow); display: flex; flex-direction: column; gap: 1.5rem;
   align-items: center; text-align: center; transition: border-color 0.4s var(--ease);
+  overflow: hidden; max-width: 100%; min-width: 0;
 }
 .lab-match-badge {
   position: absolute; top: 16px; right: 16px; background: rgba(34, 197, 94, 0.2);
@@ -1275,17 +1293,81 @@ html.cursor-hover .cursor-ring {
 
   /* Cocktails Showcase on Mobile */
   .ck-stage-grid {
-    gap: 1.5rem;
+    gap: 1.25rem;
+    grid-template-columns: minmax(0, 1fr);
   }
   .ck-feature-card {
-    padding: 1.3rem;
-    border-radius: 22px;
+    padding: 1.15rem 1rem;
+    border-radius: 20px;
+    gap: 1.15rem;
+    transform: none !important;
+    transform-style: flat !important;
+    -webkit-transform-style: flat !important;
+    perspective: none !important;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+    max-width: 100%;
+    min-width: 0;
+    overflow: hidden;
+  }
+  .ck-feature-card .ck-card-glare {
+    display: none !important;
+  }
+  .ck-feature-card .ck-card-halo {
+    opacity: 0.25;
+    filter: blur(28px);
+  }
+  .ck-image-box {
+    width: 100%;
+    max-width: 220px;
+    margin-inline: auto;
+    aspect-ratio: 1 / 1;
+    border-radius: 16px;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+  }
+  .ck-card-content {
+    gap: 0.75rem;
+    width: 100%;
+  }
+  .ck-meta-row {
+    margin-bottom: 0.1rem;
+  }
+  .ck-flavor-cat {
+    font-size: 0.74rem;
   }
   .ck-feature-card .ck-active-name {
-    font-size: 1.85rem;
+    font-size: 1.55rem;
+    line-height: 1.1;
   }
   .ck-feature-card .ck-price-pill {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
+  }
+  .ck-active-tagline {
+    font-size: 0.88rem;
+    line-height: 1.35;
+  }
+  .ck-ingredients-box {
+    padding: 0.7rem 0.85rem;
+    border-radius: 12px;
+  }
+  .ck-active-desc {
+    font-size: 0.82rem;
+    line-height: 1.45;
+  }
+  .ck-chip-tag {
+    font-size: 0.72rem;
+    padding: 0.2rem 0.6rem;
+  }
+  .ck-sensory-panel {
+    padding: 0.7rem 0.85rem;
+    border-radius: 12px;
+    gap: 0.45rem;
+  }
+  .ck-meter-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.45rem 0.75rem;
+  }
+  .ck-meter-labels {
+    font-size: 0.72rem;
   }
   .ck-thumb-list {
     flex-direction: row;
@@ -1365,18 +1447,69 @@ html.cursor-hover .cursor-ring {
 
   /* Mixology Lab */
   .lab-grid {
-    gap: 1.8rem;
+    gap: 1.5rem;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .lab-selectors {
+    min-width: 0;
+    max-width: 100%;
   }
   .lab-step-group {
-    padding: 1.2rem;
-    border-radius: 18px;
+    padding: 1.05rem 0.95rem;
+    border-radius: 16px;
+    gap: 0.7rem;
+  }
+  .lab-step-title {
+    font-size: 1.15rem;
+  }
+  .lab-chip-group {
+    gap: 0.45rem;
+  }
+  .lab-chip-btn {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.85rem;
+    min-height: 38px;
   }
   .lab-result-card {
-    padding: 1.4rem;
-    border-radius: 22px;
+    padding: 1.25rem 1rem;
+    border-radius: 20px;
+    overflow: hidden;
+    max-width: 100%;
+    min-width: 0;
+    gap: 1.1rem;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+  }
+  .lab-match-badge {
+    top: 12px;
+    right: 12px;
+    font-size: 0.72rem;
+    padding: 0.25rem 0.7rem;
+  }
+  .lab-drink-visual {
+    width: clamp(120px, 35vw, 160px);
+    margin: 0.25rem auto;
+    aspect-ratio: 1;
+  }
+  .lab-drink-halo {
+    filter: blur(20px);
+  }
+  .lab-drink-img {
+    border-radius: 16px;
   }
   .lab-drink-name {
-    font-size: 1.8rem;
+    font-size: 1.55rem;
+    line-height: 1.1;
+  }
+  .lab-drink-tagline {
+    font-size: 0.86rem;
+    margin: 0 0 0.45rem;
+    max-width: 30ch;
+  }
+  .lab-drink-details {
+    gap: 0.85rem;
+  }
+  .lab-drink-price {
+    font-size: 1.4rem;
   }
 
   /* Digital Menu on Mobile */

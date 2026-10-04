@@ -262,8 +262,9 @@ export function initCocktails({ isStatic }) {
     }
   }
 
-  // 3D Perspective Tilt on the Highlight Card
-  if (featureCard && !isStatic) {
+  // 3D Perspective Tilt on the Highlight Card (desktop fine mouse only; disabled on touch/mobile to prevent Safari 3D projection scaling bugs)
+  const canTilt = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  if (featureCard && !isStatic && canTilt) {
     featureCard.addEventListener('pointermove', (e) => {
       const rect = featureCard.getBoundingClientRect();
       const x = (e.clientX - rect.left) / rect.width - 0.5;
